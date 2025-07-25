@@ -9,8 +9,8 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
-    "deploy:staging": "turbo deploy:staging",
-    "deploy:prod": "turbo deploy:prod",
+    "deploy:staging": "pnpm run build && firebase use rep-flow-staging && firebase deploy --project rep-flow-staging",
+    "deploy:prod": "pnpm run build && firebase use rep-flow-prod && firebase deploy --project rep-flow-prod",
     "deploy:staging:rules": "firebase use rep-flow-staging && firebase deploy --only firestore:rules,firestore:indexes",
     "deploy:prod:rules": "firebase use rep-flow-prod && firebase deploy --only firestore:rules,firestore:indexes",
     "deploy:all:rules": "pnpm run deploy:staging:rules && pnpm run deploy:prod:rules"
