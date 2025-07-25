@@ -6,8 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "lint": "eslint . --ext ts,tsx",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview",
+    "deploy:staging:rules": "firebase use rep-flow-staging && firebase deploy --only firestore:rules,firestore:indexes",
+    "deploy:prod:rules": "firebase use rep-flow-prod && firebase deploy --only firestore:rules,firestore:indexes",
+    "deploy:all:rules": "pnpm run deploy:staging:rules && pnpm run deploy:prod:rules",
+    "deploy:staging": "firebase deploy --only hosting --project rep-flow-staging",
+    "deploy:prod": "firebase deploy --only hosting --project rep-flow-prod",
+    "deploy:all": "pnpm run deploy:staging && pnpm run deploy:prod"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.0",
@@ -37,6 +44,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
+    "firebase-tools": "^14.11.1",
     "globals": "^16.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",

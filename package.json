@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite, pnpm --filter web, turbo dev",
+    "build": "vite build, pnpm --filter web, turbo build",
     "lint": "eslint . --ext ts,tsx",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
@@ -20,5 +20,8 @@
   "packageManager": "pnpm@10.13.1",
   "devDependencies": {
     "pnpm": "^10.13.1"
+  },
+  "dependencies": {
+    "turbo": "^2.5.5"
   }
 }
