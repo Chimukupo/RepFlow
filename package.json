@@ -4,7 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext ts,tsx",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview",
+    "deploy:staging:rules": "firebase use rep-flow-staging && firebase deploy --only firestore:rules,firestore:indexes",
+    "deploy:prod:rules": "firebase use rep-flow-prod && firebase deploy --only firestore:rules,firestore:indexes",
+    "deploy:all:rules": "pnpm run deploy:staging:rules && npm run deploy:prod:rules"
   },
   "keywords": [],
   "author": "",
