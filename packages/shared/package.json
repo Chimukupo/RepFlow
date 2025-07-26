@@ -5,7 +5,11 @@
   "type": "module",
   "exports": {
     "./schemas/auth": "./src/schemas/auth.ts",
-    "./schemas/profile": "./src/schemas/profile.ts"
+    "./schemas/profile": "./src/schemas/profile.ts",
+    "./schemas/workout": "./src/schemas/workout.ts",
+    "./schemas/routine": "./src/schemas/routine.ts",
+    "./schemas/goal": "./src/schemas/goal.ts",
+    "./schemas/bmi-history": "./src/schemas/bmi-history.ts"
   },
   "dependencies": {
     "zod": "^4.0.10"
