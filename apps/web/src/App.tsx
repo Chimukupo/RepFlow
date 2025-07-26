@@ -6,12 +6,12 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AuthGuard } from './components/auth/AuthGuard';
 import { AuthPage } from './pages/AuthPage';
 import { ProfileUpdateForm } from './components/profile/ProfileUpdateForm';
+import { ExerciseSelector } from './components/exercises/ExerciseSelector';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Activity, Target, Settings, LogOut, Edit } from 'lucide-react';
-import { calculateBMI, getBMICategory, getBMICategoryColor } from 'shared/schemas/profile';
+import { Activity, Target, LogOut } from 'lucide-react';
 
 // Main dashboard component
 const Dashboard: React.FC = () => {
@@ -25,9 +25,6 @@ const Dashboard: React.FC = () => {
       console.error('Logout error:', error);
     }
   };
-
-  const bmi = userProfile?.weight && userProfile?.height ? 
-    calculateBMI(userProfile.weight, userProfile.height, userProfile.units) : null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -64,138 +61,32 @@ const Dashboard: React.FC = () => {
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="profile">Profile</TabsTrigger>
+              <TabsTrigger value="exercises">Exercises</TabsTrigger>
               <TabsTrigger value="workouts">Workouts</TabsTrigger>
+              <TabsTrigger value="profile">Profile</TabsTrigger>
               <TabsTrigger value="progress">Progress</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-6">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                  Welcome to RepFlow!
-                </h2>
-                <p className="text-lg text-gray-600 mb-8">
-                  Your fitness journey starts here. Breathe, Train, Conquer.
-                </p>
-              </div>
-
-              {/* Stats Overview */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Profile Completion</CardTitle>
-                    <User className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">
-                      {userProfile ? 
-                        Math.round((Object.values(userProfile).filter(v => v !== undefined && v !== null).length / 12) * 100) 
-                        : 0}%
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Complete your profile for better recommendations
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">BMI</CardTitle>
-                    <Activity className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">
-                      {bmi || 'N/A'}
-                    </div>
-                    <p className={`text-xs ${bmi ? getBMICategoryColor(bmi) : 'text-muted-foreground'}`}>
-                      {bmi ? getBMICategory(bmi) : 'Add weight & height'}
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Fitness Level</CardTitle>
-                    <Target className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold capitalize">
-                      {userProfile?.fitnessLevel || 'Not Set'}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {userProfile?.fitnessLevel ? 'Keep pushing!' : 'Set your fitness level'}
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Goals</CardTitle>
-                    <Settings className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">
-                      {userProfile?.fitnessGoals?.length || 0}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {userProfile?.fitnessGoals?.length ? 'Goals set' : 'Set your goals'}
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Quick Actions */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Quick Actions</CardTitle>
-                  <CardDescription>Get started with RepFlow</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <Button 
-                      variant="outline" 
-                      className="h-20 flex flex-col items-center justify-center space-y-2"
-                      onClick={() => setActiveTab('profile')}
-                    >
-                      <Edit className="h-6 w-6" />
-                      <span>Complete Profile</span>
-                    </Button>
-                    
-                    <Button 
-                      variant="outline" 
-                      className="h-20 flex flex-col items-center justify-center space-y-2"
-                      disabled
-                    >
-                      <Activity className="h-6 w-6" />
-                      <span>Start Workout</span>
-                    </Button>
-                    
-                    <Button 
-                      variant="outline" 
-                      className="h-20 flex flex-col items-center justify-center space-y-2"
-                      disabled
-                    >
-                      <Target className="h-6 w-6" />
-                      <span>Set Goals</span>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Coming Soon */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Coming Soon</CardTitle>
-                  <CardDescription>Features we're working on</CardDescription>
+                  <CardTitle>Welcome to RepFlow!</CardTitle>
+                  <CardDescription>Your comprehensive fitness tracking platform</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="space-y-2">
-                      <h3 className="font-semibold">🏋️ Exercise Selection & Muscle Visualization</h3>
+                      <h3 className="font-semibold">💪 Exercise Database & Muscle Visualization</h3>
                       <p className="text-sm text-gray-600">
-                        Choose exercises and see which muscles you're targeting with visual feedback
+                        Browse our comprehensive exercise library with real-time muscle group visualization
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <h3 className="font-semibold">🎯 Custom Workout Builder</h3>
+                      <p className="text-sm text-gray-600">
+                        Create personalized workout routines tailored to your fitness goals
                       </p>
                     </div>
                     <div className="space-y-2">
@@ -219,6 +110,16 @@ const Dashboard: React.FC = () => {
                   </div>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="exercises" className="space-y-6">
+              <ExerciseSelector 
+                onExerciseSelect={(exercise) => {
+                  console.log('Selected exercise:', exercise);
+                  // TODO: Add muscle visualization integration
+                }}
+                showMuscleGroups={true}
+              />
             </TabsContent>
 
             <TabsContent value="profile" className="space-y-6">

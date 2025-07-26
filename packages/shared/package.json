@@ -9,7 +9,9 @@
     "./schemas/workout": "./src/schemas/workout.ts",
     "./schemas/routine": "./src/schemas/routine.ts",
     "./schemas/goal": "./src/schemas/goal.ts",
-    "./schemas/bmi-history": "./src/schemas/bmi-history.ts"
+    "./schemas/bmi-history": "./src/schemas/bmi-history.ts",
+    "./data/exercise-types": "./src/data/exercise-types.ts",
+    "./data/exercises": "./src/data/exercises.ts"
   },
   "dependencies": {
     "zod": "^4.0.10"
