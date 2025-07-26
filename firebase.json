@@ -2,12 +2,12 @@
   "hosting": [
     {
       "site": "rep-flow-staging", 
-      "public": "apps/web/build",
+      "public": "apps/web/dist",
       "rewrites": [{ "source": "**", "destination": "/index.html" }]
     },
     {
       "site": "rep-flow-prod",
-      "public": "apps/web/build",
+      "public": "apps/web/dist",
       "rewrites": [{ "source": "**", "destination": "/index.html" }]
     }
   ],
