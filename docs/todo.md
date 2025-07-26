@@ -70,21 +70,23 @@
 - [x] Implement JWT token management
 - [x] Add authentication guards for protected routes
 
-### Milestone 2.2: User Profile System
-- [ ] Design and implement User data model
-- [ ] Create Firestore `users` collection with security rules
-- [ ] Build user profile creation flow
-- [ ] Implement profile update functionality (weight, height)
-- [ ] Add basic user dashboard structure
-- [ ] Create user session management
+### Milestone 2.2: User Profile System ✅ COMPLETED
+- [x] Design and implement User data model (comprehensive profile schema)
+- [x] Create Firestore `users` collection with security rules
+- [x] Build user profile creation flow with default values
+- [x] Implement profile update functionality (weight, height, preferences)
+- [x] Add comprehensive user dashboard structure (4-tab interface)
+- [x] Create enhanced user session management with profile refresh
+- [x] Build profile picture upload functionality with Firebase Storage
+- [x] Add user preferences and settings (privacy, notifications, appearance)
 
-### Milestone 2.3: Authentication UI/UX
-- [ ] Design responsive login/register pages with shadcn/ui
-- [ ] Implement form validation with React Hook Form + Zod
-- [ ] Add loading states and error handling
-- [ ] Create password reset functionality
-- [ ] Add logout functionality
-- [ ] Implement redirect flows after authentication
+### Milestone 2.3: Authentication UI/UX ✅ COMPLETED
+- [x] Design responsive login/register pages with shadcn/ui
+- [x] Implement form validation with React Hook Form + Zod
+- [x] Add loading states and error handling
+- [x] Create password reset functionality
+- [x] Add logout functionality
+- [x] Implement redirect flows after authentication
 
 ---
 

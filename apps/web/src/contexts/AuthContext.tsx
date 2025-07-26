@@ -10,17 +10,7 @@ import {
 import type { User } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
-
-// User profile type extending Firebase User
-export interface UserProfile {
-  uid: string;
-  email: string;
-  displayName?: string;
-  weight?: number;
-  height?: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import type { UserProfile } from 'shared/schemas/profile';
 
 // Authentication context type
 interface AuthContextType {
@@ -32,6 +22,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   updateUserProfile: (updates: Partial<UserProfile>) => Promise<void>;
+  refreshUserProfile: () => Promise<void>;
 }
 
 // Create the context
@@ -69,6 +60,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         uid: user.uid,
         email: email!,
         displayName: displayName || undefined,
+        units: 'metric', // Default to metric
+        profileVisible: true,
+        shareProgress: false,
+        emailNotifications: true,
+        workoutReminders: true,
+        darkMode: false,
         createdAt,
         updatedAt: createdAt,
         ...additionalData,
@@ -84,6 +81,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       // User exists, load their profile
       const profile = userSnap.data() as UserProfile;
+      // Convert Firestore timestamps to Date objects
+      profile.createdAt = profile.createdAt instanceof Date ? profile.createdAt : new Date(profile.createdAt);
+      profile.updatedAt = profile.updatedAt instanceof Date ? profile.updatedAt : new Date(profile.updatedAt);
+      setUserProfile(profile);
+    }
+  };
+
+  // Refresh user profile from Firestore
+  const refreshUserProfile = async () => {
+    if (!currentUser) return;
+    
+    const userRef = doc(db, 'users', currentUser.uid);
+    const userSnap = await getDoc(userRef);
+    
+    if (userSnap.exists()) {
+      const profile = userSnap.data() as UserProfile;
+      // Convert Firestore timestamps to Date objects
+      profile.createdAt = profile.createdAt instanceof Date ? profile.createdAt : new Date(profile.createdAt);
+      profile.updatedAt = profile.updatedAt instanceof Date ? profile.updatedAt : new Date(profile.updatedAt);
       setUserProfile(profile);
     }
   };
@@ -127,10 +143,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       updatedAt: new Date(),
     };
 
-    await setDoc(userRef, updatedProfile, { merge: true });
-    
-    if (userProfile) {
-      setUserProfile({ ...userProfile, ...updatedProfile });
+    try {
+      await setDoc(userRef, updatedProfile, { merge: true });
+      
+      if (userProfile) {
+        setUserProfile({ ...userProfile, ...updatedProfile });
+      }
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      throw error;
     }
   };
 
@@ -160,6 +181,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     logout,
     resetPassword,
     updateUserProfile,
+    refreshUserProfile,
   };
 
   return (

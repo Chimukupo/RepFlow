@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./schemas/auth": "./src/schemas/auth.ts"
+    "./schemas/auth": "./src/schemas/auth.ts",
+    "./schemas/profile": "./src/schemas/profile.ts"
   },
   "dependencies": {
     "zod": "^4.0.10"
