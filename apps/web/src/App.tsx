@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { queryClient } from './lib/queryClient';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AuthGuard } from './components/auth/AuthGuard';
 import { AuthPage } from './pages/AuthPage';
@@ -291,7 +294,10 @@ const AppContent: React.FC = () => {
 function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <QueryClientProvider client={queryClient}>
+        <AppContent />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </AuthProvider>
   );
 }
