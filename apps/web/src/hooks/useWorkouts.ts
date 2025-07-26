@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { WorkoutAPI } from '@/lib/api/workouts';
 import { queryKeys, invalidateQueries } from '@/lib/queryClient';
 import type {
-  Workout,
+  LegacyWorkout,
   WorkoutCreateData,
   WorkoutUpdateData,
   WorkoutQuery
@@ -106,7 +106,7 @@ export const useCreateWorkout = () => {
       const previousWorkouts = queryClient.getQueryData(queryKeys.userWorkouts(currentUser.uid));
       
       // Optimistically update to the new value
-      const optimisticWorkout: Workout = {
+      const optimisticWorkout = {
         id: 'temp-' + Date.now(),
         user_id: currentUser.uid,
         ...newWorkout,
@@ -153,11 +153,11 @@ export const useUpdateWorkout = () => {
       // Snapshot previous value
       const previousWorkout = queryClient.getQueryData(queryKeys.workout(workoutId));
       
-      // Optimistically update
-      queryClient.setQueryData(queryKeys.workout(workoutId), (old: Workout | undefined) => {
-        if (!old) return old;
-        return { ...old, ...updates, updated_at: new Date() };
-      });
+             // Optimistically update
+       queryClient.setQueryData(queryKeys.workout(workoutId), (old: LegacyWorkout | undefined) => {
+         if (!old) return old;
+         return { ...old, ...updates, updated_at: new Date() };
+       });
       
       return { previousWorkout };
     },
@@ -195,10 +195,10 @@ export const useDeleteWorkout = () => {
       // Optimistically remove from list
       queryClient.setQueryData(queryKeys.userWorkouts(currentUser.uid), (old: any) => {
         if (!old) return old;
-        return {
-          ...old,
-          workouts: old.workouts.filter((workout: Workout) => workout.id !== workoutId)
-        };
+                 return {
+           ...old,
+           workouts: old.workouts.filter((workout: LegacyWorkout) => workout.id !== workoutId)
+         };
       });
       
       return { previousWorkouts };

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, Zap, Dumbbell, Target, Users } from 'lucide-react';
+import { Search, Filter, Zap, Dumbbell, Target, Users, Clock, TrendingUp, Star } from 'lucide-react';
 import { 
   EXERCISES, 
   searchExercises 
@@ -8,6 +8,8 @@ import type { Exercise, ExerciseCategory, DifficultyLevel, EquipmentType } from 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useMuscleGroupImages } from '@/hooks/useMuscleGroupImage';
+import { ExerciseDetailModal } from './ExerciseDetailModal';
 
 interface ExerciseSelectorProps {
   onExerciseSelect?: (exercise: Exercise) => void;
@@ -36,6 +38,7 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
     muscleGroup: ''
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedExerciseForDetail, setSelectedExerciseForDetail] = useState<Exercise | null>(null);
 
   // Get unique values for filter dropdowns
   const categories = [...new Set(EXERCISES.map(e => e.category))] as ExerciseCategory[];
@@ -78,35 +81,27 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
     return results;
   }, [searchQuery, filters]);
 
+  // Get muscle group images for visible exercises
+  const muscleImages = useMuscleGroupImages(filteredExercises, '70,130,180');
+
   const handleExerciseClick = (exercise: Exercise) => {
     if (onExerciseSelect) {
       onExerciseSelect(exercise);
     }
   };
 
+  const handleExerciseDetailClick = (exercise: Exercise, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the card click from firing
+    setSelectedExerciseForDetail(exercise);
+  };
+
   const isSelected = (exercise: Exercise) => {
     return selectedExercises.some(selected => selected.id === exercise.id);
   };
 
-  const getDifficultyColor = (difficulty: DifficultyLevel) => {
-    switch (difficulty) {
-      case 'beginner': return 'bg-green-100 text-green-800 border-green-200';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'advanced': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
 
-  const getCategoryIcon = (category: ExerciseCategory) => {
-    switch (category) {
-      case 'push': return <Zap className="w-4 h-4" />;
-      case 'pull': return <Target className="w-4 h-4" />;
-      case 'legs': return <Dumbbell className="w-4 h-4" />;
-      case 'core': return <Users className="w-4 h-4" />;
-      case 'full-body': return <Users className="w-4 h-4" />;
-      default: return <Dumbbell className="w-4 h-4" />;
-    }
-  };
+
+
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
@@ -118,15 +113,15 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
             Choose from {EXERCISES.length} exercises • {filteredExercises.length} shown
           </p>
         </div>
-        
-        <Button
-          onClick={() => setShowFilters(!showFilters)}
-          variant="outline"
-          className="flex items-center gap-2"
-        >
-          <Filter className="w-4 h-4" />
-          {showFilters ? 'Hide Filters' : 'Show Filters'}
-        </Button>
+                 
+         <Button
+           onClick={() => setShowFilters(!showFilters)}
+           variant="outline"
+           className="flex items-center gap-2"
+         >
+           <Filter className="w-4 h-4" />
+           {showFilters ? 'Hide Filters' : 'Show Filters'}
+         </Button>
       </div>
 
       {/* Search Bar */}
@@ -243,65 +238,204 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
         </Card>
       )}
 
-      {/* Exercise Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredExercises.map((exercise) => (
-          <Card 
-            key={exercise.id} 
-            className={`cursor-pointer transition-all hover:shadow-lg ${
-              isSelected(exercise) ? 'ring-2 ring-blue-500 bg-blue-50' : 'hover:shadow-md'
-            }`}
-            onClick={() => handleExerciseClick(exercise)}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2">
+             {/* Exercise Grid */}
+       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+        {filteredExercises.map((exercise) => {
+          const muscleImage = muscleImages[exercise.id];
+          
+          // Get category icon and color
+          const getCategoryIcon = (category: ExerciseCategory) => {
+            switch (category) {
+              case 'strength': return <Dumbbell className="w-4 h-4" />;
+              case 'cardio': return <Zap className="w-4 h-4" />;
+              case 'flexibility': return <Target className="w-4 h-4" />;
+              case 'balance': return <TrendingUp className="w-4 h-4" />;
+              case 'sports': return <Users className="w-4 h-4" />;
+              default: return <Dumbbell className="w-4 h-4" />;
+            }
+          };
+
+          const getCategoryColor = (category: ExerciseCategory) => {
+            switch (category) {
+              case 'strength': return 'text-blue-600 bg-blue-50 border-blue-200';
+              case 'cardio': return 'text-red-600 bg-red-50 border-red-200';
+              case 'flexibility': return 'text-green-600 bg-green-50 border-green-200';
+              case 'balance': return 'text-purple-600 bg-purple-50 border-purple-200';
+              case 'sports': return 'text-orange-600 bg-orange-50 border-orange-200';
+              default: return 'text-gray-600 bg-gray-50 border-gray-200';
+            }
+          };
+
+          const getEnhancedDifficultyColor = (difficulty: DifficultyLevel) => {
+            switch (difficulty) {
+              case 'beginner': return 'text-green-700 bg-green-100 border-green-300';
+              case 'intermediate': return 'text-yellow-700 bg-yellow-100 border-yellow-300';
+              case 'advanced': return 'text-red-700 bg-red-100 border-red-300';
+              default: return 'text-gray-700 bg-gray-100 border-gray-300';
+            }
+          };
+          
+          return (
+            <Card 
+              key={exercise.id} 
+              className={`group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 ${
+                isSelected(exercise) 
+                  ? 'ring-2 ring-blue-500 bg-blue-50 border-blue-200 shadow-lg' 
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}
+              onClick={() => handleExerciseClick(exercise)}
+            >
+              <CardHeader className="pb-3 relative">
+                {/* Category Icon Badge */}
+                <div className={`absolute top-4 right-4 p-2 rounded-full border ${getCategoryColor(exercise.category)}`}>
                   {getCategoryIcon(exercise.category)}
-                  <CardTitle className="text-lg">{exercise.name}</CardTitle>
                 </div>
-                <Badge className={getDifficultyColor(exercise.difficulty)}>
-                  {exercise.difficulty}
-                </Badge>
-              </div>
-              <CardDescription className="text-sm">
-                {exercise.description}
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent className="pt-0">
-              {/* Primary Muscles */}
-              <div className="mb-3">
-                <p className="text-xs font-medium text-gray-600 mb-1">Primary Muscles</p>
-                <div className="flex flex-wrap gap-1">
-                  {exercise.primaryMuscles.map(muscle => (
-                    <Badge key={muscle} variant="secondary" className="text-xs">
-                      {muscle}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
 
-              {/* Equipment */}
-              <div className="mb-3">
-                <p className="text-xs font-medium text-gray-600 mb-1">Equipment</p>
-                <div className="flex flex-wrap gap-1">
-                  {exercise.equipment.map(eq => (
-                    <Badge key={eq} variant="outline" className="text-xs">
-                      {eq}
+                <div className="pr-12">
+                  <CardTitle className="text-lg font-bold leading-tight mb-2 group-hover:text-blue-600 transition-colors">
+                    {exercise.name}
+                  </CardTitle>
+                  
+                  {/* Difficulty and Rating */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge className={`text-xs font-medium border ${getEnhancedDifficultyColor(exercise.difficulty)}`}>
+                      {exercise.difficulty}
                     </Badge>
-                  ))}
+                    <div className="flex items-center gap-1">
+                      <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                      <span className="text-xs font-medium text-gray-600">4.5</span>
+                    </div>
+                  </div>
+                  
+                  <CardDescription className="text-sm text-gray-600 line-clamp-2">
+                    {exercise.description}
+                  </CardDescription>
                 </div>
-              </div>
+              </CardHeader>
+              
+              <CardContent className="pt-0 space-y-4">
+                {/* Enhanced Muscle Group Visualization */}
+                <div className="flex justify-center">
+                  <div className="relative w-24 h-32 bg-gradient-to-b from-gray-50 to-gray-100 rounded-xl border-2 border-gray-200 overflow-hidden shadow-inner">
+                    {muscleImage?.isLoading && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+                        <div className="animate-spin rounded-full h-6 w-6 border-2 border-blue-600 border-t-transparent"></div>
+                      </div>
+                    )}
+                    
+                    {muscleImage?.imageUrl && (
+                      <img
+                        src={muscleImage.imageUrl}
+                        alt={`${exercise.name} muscle groups`}
+                        className="w-full h-full object-contain transition-transform group-hover:scale-105"
+                        onError={(e) => {
+                          console.error('Failed to load muscle image:', e);
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    )}
+                    
+                    {muscleImage?.error && (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-xs text-gray-400 p-2 text-center">
+                        <Target className="w-6 h-6 mb-1" />
+                        <span>Image unavailable</span>
+                      </div>
+                    )}
+                    
+                    {!muscleImage && (
+                      <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-400">
+                        <div className="animate-pulse flex flex-col items-center">
+                          <div className="w-8 h-8 bg-gray-300 rounded-full mb-2"></div>
+                          <span>Loading...</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-              {/* Target Reps */}
-              {exercise.targetReps && (
-                <div className="text-xs text-gray-500">
-                  Target: {exercise.targetReps.min}-{exercise.targetReps.max} reps
+                {/* Quick Stats */}
+                <div className="grid grid-cols-2 gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="text-center">
+                    <div className="text-xs font-medium text-gray-500 mb-1">Primary</div>
+                    <div className="text-sm font-bold text-gray-900">{exercise.primaryMuscles.length}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xs font-medium text-gray-500 mb-1">Equipment</div>
+                    <div className="text-sm font-bold text-gray-900">{exercise.equipment.length}</div>
+                  </div>
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+
+                {/* Primary Muscles - Compact */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                    <Target className="w-3 h-3" />
+                    Primary Muscles
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {exercise.primaryMuscles.slice(0, 3).map(muscle => (
+                      <Badge key={muscle} variant="secondary" className="text-xs px-2 py-1 bg-blue-100 text-blue-800 border-blue-200">
+                        {muscle}
+                      </Badge>
+                    ))}
+                    {exercise.primaryMuscles.length > 3 && (
+                      <Badge variant="secondary" className="text-xs px-2 py-1 bg-gray-100 text-gray-600">
+                        +{exercise.primaryMuscles.length - 3}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+
+                {/* Equipment - Compact */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                    <Dumbbell className="w-3 h-3" />
+                    Equipment
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {exercise.equipment.slice(0, 2).map(eq => (
+                      <Badge key={eq} variant="outline" className="text-xs px-2 py-1 border-gray-300 text-gray-700">
+                        {eq}
+                      </Badge>
+                    ))}
+                    {exercise.equipment.length > 2 && (
+                      <Badge variant="outline" className="text-xs px-2 py-1 border-gray-300 text-gray-600">
+                        +{exercise.equipment.length - 2}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+
+                {/* Target Reps with Icon */}
+                {exercise.targetReps && (
+                  <div className="flex items-center gap-2 p-2 bg-green-50 rounded-lg border border-green-200">
+                    <Clock className="w-4 h-4 text-green-600" />
+                    <span className="text-xs font-medium text-green-800">
+                      Target: {exercise.targetReps.min}-{exercise.targetReps.max} reps
+                    </span>
+                  </div>
+                )}
+
+                {/* Enhanced Action Buttons */}
+                <div className="flex gap-2 pt-2">
+                  <Button
+                    onClick={(e) => handleExerciseDetailClick(exercise, e)}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 group-hover:border-blue-300 group-hover:text-blue-600 transition-colors"
+                  >
+                    <Target className="w-3 h-3 mr-1" />
+                    Details
+                  </Button>
+                  {isSelected(exercise) && (
+                    <div className="flex items-center justify-center px-3 py-2 bg-blue-100 text-blue-600 rounded-md">
+                      <Star className="w-4 h-4 fill-current" />
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+           </Card>
+           );
+         })}
       </div>
 
       {/* No Results */}
@@ -327,9 +461,16 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
             variant="outline"
           >
             Clear All Filters
-          </Button>
-        </div>
-      )}
-    </div>
-  );
+                     </Button>
+         </div>
+       )}
+
+       {/* Exercise Detail Modal */}
+       <ExerciseDetailModal
+         exercise={selectedExerciseForDetail}
+         isOpen={!!selectedExerciseForDetail}
+         onClose={() => setSelectedExerciseForDetail(null)}
+       />
+     </div>
+   );
 }; 

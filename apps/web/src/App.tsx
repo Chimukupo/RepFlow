@@ -7,11 +7,12 @@ import { AuthGuard } from './components/auth/AuthGuard';
 import { AuthPage } from './pages/AuthPage';
 import { ProfileUpdateForm } from './components/profile/ProfileUpdateForm';
 import { ExerciseSelector } from './components/exercises/ExerciseSelector';
+import { WorkoutManager } from './components/workouts/WorkoutManager';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Activity, Target, LogOut } from 'lucide-react';
+import { Target, LogOut } from 'lucide-react';
 
 // Main dashboard component
 const Dashboard: React.FC = () => {
@@ -129,25 +130,13 @@ const Dashboard: React.FC = () => {
             </TabsContent>
 
             <TabsContent value="workouts" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Workouts</CardTitle>
-                  <CardDescription>Your workout history and routines</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8">
-                    <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No workouts yet</h3>
-                    <p className="text-gray-600 mb-4">
-                      Start your first workout to see your progress here
-                    </p>
-                    <Button disabled>
-                      <Activity className="mr-2 h-4 w-4" />
-                      Start Workout (Coming Soon)
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <WorkoutManager
+                onStartWorkout={(workout) => {
+                  console.log('Starting workout:', workout);
+                  // TODO: Implement workout session
+                  alert(`Starting workout: ${workout.name}`);
+                }}
+              />
             </TabsContent>
 
             <TabsContent value="progress" className="space-y-6">

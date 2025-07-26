@@ -490,6 +490,324 @@ export const EXERCISES: Exercise[] = [
     targetSets: { min: 3, max: 4 },
     restTime: { min: 30, max: 60 },
     tags: ['isolation', 'calf-focused', 'simple']
+  },
+
+  // === ADDITIONAL STRENGTH EXERCISES ===
+  {
+    id: 'incline-bench-press',
+    name: 'Incline Bench Press',
+    slug: 'incline-bench-press',
+    description: 'Upper chest focused barbell exercise performed on an inclined bench',
+    instructions: [
+      'Set bench to 30-45 degree incline',
+      'Lie back with eyes under the barbell',
+      'Grip bar slightly wider than shoulders',
+      'Lower bar to upper chest, then press up'
+    ],
+    primaryMuscles: ['chest', 'shoulders'],
+    secondaryMuscles: ['triceps'],
+    category: 'strength',
+    difficulty: 'intermediate',
+    equipment: ['barbell', 'bench'],
+    force: 'push',
+    mechanic: 'compound',
+    tips: [
+      'Keep your shoulder blades retracted',
+      'Touch the bar to your upper chest',
+      'Drive through your heels for stability'
+    ],
+    variations: ['Dumbbell Incline Press', 'Incline Dumbbell Flyes'],
+    commonMistakes: [
+      'Setting incline too steep',
+      'Bouncing bar off chest',
+      'Not controlling the descent'
+    ],
+    targetReps: { min: 6, max: 12 },
+    targetSets: { min: 3, max: 4 },
+    restTime: { min: 120, max: 180 },
+    tags: ['compound', 'upper-chest', 'strength']
+  },
+
+  {
+    id: 'dumbbell-rows',
+    name: 'Dumbbell Rows',
+    slug: 'dumbbell-rows',
+    description: 'Unilateral back exercise for building lat and rhomboid strength',
+    instructions: [
+      'Place one knee and hand on bench for support',
+      'Hold dumbbell in opposite hand',
+      'Pull dumbbell to your hip, squeezing shoulder blade',
+      'Lower with control and repeat'
+    ],
+    primaryMuscles: ['back', 'latissimus'],
+    secondaryMuscles: ['biceps', 'shoulders'],
+    category: 'strength',
+    difficulty: 'beginner',
+    equipment: ['dumbbells', 'bench'],
+    force: 'pull',
+    mechanic: 'compound',
+    tips: [
+      'Keep your back straight and core tight',
+      'Pull with your back muscles, not just arms',
+      'Squeeze shoulder blade at the top'
+    ],
+    variations: ['Chest-Supported Row', 'Bent-Over Dumbbell Row'],
+    commonMistakes: [
+      'Using too much arm instead of back',
+      'Rotating torso during movement',
+      'Not achieving full range of motion'
+    ],
+    targetReps: { min: 8, max: 15 },
+    targetSets: { min: 3, max: 4 },
+    restTime: { min: 90, max: 120 },
+    tags: ['unilateral', 'back-building', 'compound']
+  },
+
+  {
+    id: 'hip-thrusts',
+    name: 'Hip Thrusts',
+    slug: 'hip-thrusts',
+    description: 'Glute-focused exercise performed with shoulders elevated on a bench',
+    instructions: [
+      'Sit with your back against a bench',
+      'Place barbell or weight across your hips',
+      'Drive through heels to lift hips up',
+      'Squeeze glutes at the top, then lower'
+    ],
+    primaryMuscles: ['gluteus'],
+    secondaryMuscles: ['hamstring', 'core'],
+    category: 'strength',
+    difficulty: 'intermediate',
+    equipment: ['barbell', 'bench'],
+    force: 'push',
+    mechanic: 'isolation',
+    tips: [
+      'Keep chin tucked and core braced',
+      'Drive through your heels',
+      'Pause and squeeze at the top'
+    ],
+    variations: ['Bodyweight Hip Thrusts', 'Single-Leg Hip Thrusts', 'Banded Hip Thrusts'],
+    commonMistakes: [
+      'Overextending the back',
+      'Not achieving full hip extension',
+      'Using knees instead of glutes'
+    ],
+    targetReps: { min: 10, max: 15 },
+    targetSets: { min: 3, max: 4 },
+    restTime: { min: 90, max: 120 },
+    tags: ['glute-focused', 'hip-extension', 'strength']
+  },
+
+  {
+    id: 'overhead-press',
+    name: 'Overhead Press',
+    slug: 'overhead-press',
+    description: 'Standing barbell press for building shoulder and core strength',
+    instructions: [
+      'Stand with feet hip-width apart',
+      'Hold barbell at shoulder height',
+      'Press bar straight up overhead',
+      'Lower with control back to shoulders'
+    ],
+    primaryMuscles: ['shoulders'],
+    secondaryMuscles: ['triceps', 'core'],
+    category: 'strength',
+    difficulty: 'intermediate',
+    equipment: ['barbell'],
+    force: 'push',
+    mechanic: 'compound',
+    tips: [
+      'Keep your core tight throughout',
+      'Press in a straight line over your head',
+      'Don\'t arch your back excessively'
+    ],
+    variations: ['Dumbbell Shoulder Press', 'Seated Overhead Press', 'Push Press'],
+    commonMistakes: [
+      'Pressing the bar forward instead of up',
+      'Excessive back arch',
+      'Not engaging the core'
+    ],
+    targetReps: { min: 6, max: 10 },
+    targetSets: { min: 3, max: 4 },
+    restTime: { min: 120, max: 180 },
+    tags: ['overhead', 'full-body', 'compound']
+  },
+
+  // === CARDIO/CONDITIONING EXERCISES ===
+  {
+    id: 'jumping-jacks',
+    name: 'Jumping Jacks',
+    slug: 'jumping-jacks',
+    description: 'Classic cardio exercise that elevates heart rate and works the whole body',
+    instructions: [
+      'Start standing with feet together, arms at sides',
+      'Jump feet apart while raising arms overhead',
+      'Jump back to starting position',
+      'Maintain steady rhythm'
+    ],
+    primaryMuscles: ['quadriceps', 'calfs'],
+    secondaryMuscles: ['shoulders', 'core'],
+    category: 'cardio',
+    difficulty: 'beginner',
+    equipment: ['bodyweight'],
+    force: 'push',
+    mechanic: 'compound',
+    tips: [
+      'Land softly on the balls of your feet',
+      'Keep movements controlled',
+      'Breathe steadily throughout'
+    ],
+    variations: ['Half Jacks', 'Cross Jacks', 'Star Jumps'],
+    commonMistakes: [
+      'Landing too hard',
+      'Moving too fast without control',
+      'Not fully extending arms overhead'
+    ],
+    targetReps: { min: 20, max: 50 },
+    targetSets: { min: 2, max: 4 },
+    restTime: { min: 30, max: 60 },
+    tags: ['cardio', 'full-body', 'conditioning']
+  },
+
+  {
+    id: 'high-knees',
+    name: 'High Knees',
+    slug: 'high-knees',
+    description: 'Dynamic cardio exercise that improves coordination and leg strength',
+    instructions: [
+      'Stand tall with feet hip-width apart',
+      'Run in place lifting knees to hip height',
+      'Pump arms naturally with the movement',
+      'Maintain quick, controlled pace'
+    ],
+    primaryMuscles: ['quadriceps', 'calfs'],
+    secondaryMuscles: ['core'],
+    category: 'cardio',
+    difficulty: 'beginner',
+    equipment: ['bodyweight'],
+    force: 'push',
+    mechanic: 'compound',
+    tips: [
+      'Keep your core engaged',
+      'Land on the balls of your feet',
+      'Drive knees up toward your chest'
+    ],
+    variations: ['High Knee Marching', 'High Knees with Arm Circles'],
+    commonMistakes: [
+      'Not lifting knees high enough',
+      'Leaning too far forward',
+      'Moving too slowly'
+    ],
+    targetReps: { min: 20, max: 40 },
+    targetSets: { min: 2, max: 4 },
+    restTime: { min: 30, max: 60 },
+    tags: ['cardio', 'plyometric', 'conditioning']
+  },
+
+  // === FLEXIBILITY/MOBILITY EXERCISES ===
+  {
+    id: 'downward-dog',
+    name: 'Downward Dog',
+    slug: 'downward-dog',
+    description: 'Yoga pose that stretches hamstrings, calves, and shoulders while building strength',
+    instructions: [
+      'Start in a plank position',
+      'Lift hips up and back into inverted V shape',
+      'Straighten legs and press heels toward floor',
+      'Hold position while breathing deeply'
+    ],
+    primaryMuscles: ['hamstring', 'calfs'],
+    secondaryMuscles: ['shoulders', 'core'],
+    category: 'flexibility',
+    difficulty: 'beginner',
+    equipment: ['bodyweight'],
+    force: 'static',
+    mechanic: 'compound',
+    tips: [
+      'Keep your spine long and straight',
+      'Press firmly through your hands',
+      'Pedal feet to warm up calves'
+    ],
+    variations: ['Three-Legged Dog', 'Puppy Pose', 'Wide-Legged Downward Dog'],
+    commonMistakes: [
+      'Rounding the spine',
+      'Not engaging the arms',
+      'Holding breath'
+    ],
+    targetReps: { min: 1, max: 1 },
+    targetSets: { min: 2, max: 4 },
+    restTime: { min: 30, max: 60 },
+    tags: ['yoga', 'flexibility', 'full-body-stretch']
+  },
+
+  {
+    id: 'child-pose',
+    name: 'Child\'s Pose',
+    slug: 'child-pose',
+    description: 'Restorative yoga pose that stretches the back and helps with relaxation',
+    instructions: [
+      'Kneel on the floor with big toes touching',
+      'Sit back on your heels',
+      'Fold forward extending arms in front',
+      'Rest forehead on the ground and breathe deeply'
+    ],
+    primaryMuscles: ['back'],
+    secondaryMuscles: ['shoulders'],
+    category: 'flexibility',
+    difficulty: 'beginner',
+    equipment: ['bodyweight'],
+    force: 'static',
+    mechanic: 'isolation',
+    tips: [
+      'Relax completely into the pose',
+      'Breathe deeply and slowly',
+      'Hold for extended periods'
+    ],
+    variations: ['Wide-Knee Child\'s Pose', 'Side Child\'s Pose'],
+    commonMistakes: [
+      'Tensing up instead of relaxing',
+      'Not breathing deeply',
+      'Rushing the pose'
+    ],
+    targetReps: { min: 1, max: 1 },
+    targetSets: { min: 1, max: 3 },
+    restTime: { min: 0, max: 30 },
+    tags: ['yoga', 'recovery', 'relaxation']
+  },
+
+  {
+    id: 'russian-twists',
+    name: 'Russian Twists',
+    slug: 'russian-twists',
+    description: 'Core exercise that targets obliques and improves rotational strength',
+    instructions: [
+      'Sit on floor with knees bent, feet lifted',
+      'Lean back slightly keeping back straight',
+      'Rotate torso left and right',
+      'Keep core engaged throughout'
+    ],
+    primaryMuscles: ['abs', 'core'],
+    secondaryMuscles: [],
+    category: 'strength',
+    difficulty: 'intermediate',
+    equipment: ['bodyweight'],
+    force: 'pull',
+    mechanic: 'isolation',
+    tips: [
+      'Keep your chest up and core tight',
+      'Focus on rotating from your core',
+      'Control the movement, don\'t rush'
+    ],
+    variations: ['Weighted Russian Twists', 'Feet-Down Russian Twists'],
+    commonMistakes: [
+      'Using arms instead of core',
+      'Moving too quickly',
+      'Rounding the back'
+    ],
+    targetReps: { min: 20, max: 40 },
+    targetSets: { min: 3, max: 4 },
+    restTime: { min: 45, max: 90 },
+    tags: ['core', 'obliques', 'rotational']
   }
 ];
 
