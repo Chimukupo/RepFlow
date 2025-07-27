@@ -89,7 +89,7 @@ export class MuscleGroupAPIError extends Error {
 
 // Rate limiting and caching
 interface CacheEntry {
-  data: any;
+  data: unknown;
   timestamp: number;
   expiresAt: number;
 }
@@ -98,7 +98,7 @@ class APICache {
   private cache = new Map<string, CacheEntry>();
   private readonly DEFAULT_TTL = 60 * 60 * 1000; // 1 hour
 
-  set(key: string, data: any, ttl: number = this.DEFAULT_TTL): void {
+  set(key: string, data: unknown, ttl: number = this.DEFAULT_TTL): void {
     const now = Date.now();
     this.cache.set(key, {
       data,
@@ -107,7 +107,7 @@ class APICache {
     });
   }
 
-  get(key: string): any | null {
+  get(key: string): unknown | null {
     const entry = this.cache.get(key);
     if (!entry) return null;
 
@@ -230,6 +230,68 @@ export class MuscleGroupAPI {
     }
   }
 
+  private async makeImageRequest(
+    endpoint: string, 
+    params?: Record<string, any>,
+    cacheTTL: number = 60 * 60 * 1000 // 1 hour default
+  ): Promise<ImageResponse> {
+    // Create cache key
+    const cacheKey = `${endpoint}:${JSON.stringify(params || {})}`;
+    
+    // Check cache first
+    const cached = this.cache.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    // Rate limiting
+    await this.rateLimiter.waitForSlot();
+
+    try {
+      const response: AxiosResponse<ArrayBuffer> = await axios.get(`${this.baseURL}${endpoint}`, {
+        params,
+        headers: this.headers,
+        timeout: 30000, // 30 second timeout
+        responseType: 'arraybuffer' // Important: get binary data
+      });
+
+      this.rateLimiter.recordRequest();
+      
+      // Convert binary data to base64 data URL
+      const base64 = btoa(
+        new Uint8Array(response.data)
+          .reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
+      
+      const imageResponse: ImageResponse = {
+        imageUrl: `data:image/png;base64,${base64}`,
+        imageBase64: base64
+      };
+      
+      // Cache successful response
+      this.cache.set(cacheKey, imageResponse, cacheTTL);
+      
+      return imageResponse;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const statusCode = error.response?.status;
+        const message = error.response?.data?.message || error.message;
+        
+        throw new MuscleGroupAPIError(
+          `API request failed: ${message}`,
+          statusCode,
+          endpoint
+        );
+      }
+      
+      throw new MuscleGroupAPIError(
+        `Unknown error occurred: ${error}`,
+        undefined,
+        endpoint
+      );
+    }
+  }
+
   /**
    * Get all available muscle groups
    */
@@ -244,7 +306,7 @@ export class MuscleGroupAPI {
     this.validateMuscleGroups(params.muscleGroups);
     this.validateColor(params.color);
     
-    return this.makeRequest<ImageResponse>('/getImage', {
+    return this.makeImageRequest('/getImage', {
       ...params,
       transparentBackground: params.transparentBackground || '0'
     });
@@ -259,7 +321,7 @@ export class MuscleGroupAPI {
     this.validateColor(params.primaryColor);
     this.validateColor(params.secondaryColor);
     
-    return this.makeRequest<ImageResponse>('/getMulticolorImage', {
+    return this.makeImageRequest('/getMulticolorImage', {
       ...params,
       transparentBackground: params.transparentBackground || '0'
     });
@@ -272,7 +334,7 @@ export class MuscleGroupAPI {
     this.validateMuscleGroups(params.muscleGroups);
     this.validateHexColors(params.colors);
     
-    return this.makeRequest<ImageResponse>('/getIndividualColorImage', {
+    return this.makeImageRequest('/getIndividualColorImage', {
       ...params,
       transparentBackground: params.transparentBackground || '0'
     });
@@ -282,7 +344,7 @@ export class MuscleGroupAPI {
    * Get base human body image without highlighted muscles
    */
   async getBaseImage(params: BaseImageParams = {}): Promise<ImageResponse> {
-    return this.makeRequest<ImageResponse>('/getBaseImage', {
+    return this.makeImageRequest('/getBaseImage', {
       transparentBackground: params.transparentBackground || '0'
     });
   }

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Dumbbell, Eye, Grid, LayoutGrid, Maximize2 } from 'lucide-react';
 import { ExerciseSelector } from './ExerciseSelector';
-import { MuscleVisualizer } from './MuscleVisualizer';
+import { MuscleVisualizerSimple } from './MuscleVisualizerSimple';
 import type { Exercise } from 'shared/data/exercise-types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -215,11 +215,9 @@ export const ExerciseWorkspace: React.FC<ExerciseWorkspaceProps> = ({
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-0">
-              <MuscleVisualizer
+              <MuscleVisualizerSimple
                 selectedExercises={selectedExercises}
-                visualizationMode={'multi'}
-                showControls={true}
-                onImageLoad={(imageUrl) => {
+                onImageLoad={(imageUrl: string) => {
                   console.log('Muscle visualization loaded:', imageUrl);
                 }}
               />

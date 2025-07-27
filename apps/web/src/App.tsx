@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { User, Power, Dumbbell } from 'lucide-react';
 import { useAuth } from './contexts/AuthContext';
 import { AuthPage } from './pages/AuthPage';
-import { ExerciseSelector } from './components/exercises/ExerciseSelector';
+import { ExerciseWorkspace } from './components/exercises/ExerciseWorkspace';
 import { WorkoutManager } from './components/workouts/WorkoutManager';
 import { GoalManager } from './components/goals/GoalManager';
 import { BMICalculator } from './components/health/BMICalculator';
@@ -13,7 +13,7 @@ import { ProgressDashboard } from './components/analytics/ProgressDashboard';
 import { ProfileUpdateForm } from './components/profile/ProfileUpdateForm';
 import { LandingPage } from './components/LandingPage';
 import { AuthGuard } from './components/auth/AuthGuard';
-import { MuscleAPIDebug } from './components/debug/MuscleAPIDebug';
+
 import './App.css';
 
 // Main dashboard component
@@ -79,7 +79,7 @@ const Dashboard: React.FC = () => {
               <TabsTrigger value="health" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Health</TabsTrigger>
               <TabsTrigger value="progress" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Progress</TabsTrigger>
               <TabsTrigger value="profile" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Profile</TabsTrigger>
-              <TabsTrigger value="debug" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Debug</TabsTrigger>
+
             </TabsList>
 
             <TabsContent value="overview" className="space-y-6">
@@ -93,7 +93,7 @@ const Dashboard: React.FC = () => {
                     <div className="space-y-2">
                       <h3 className="font-semibold text-foreground">💪 Exercise Database & Muscle Visualization</h3>
                       <p className="text-sm text-muted-foreground">
-                        Browse our comprehensive exercise library with real-time muscle group visualization
+                        Browse our comprehensive exercise library with real-time muscle group visualization powered by AI
                       </p>
                     </div>
                     <div className="space-y-2">
@@ -126,12 +126,9 @@ const Dashboard: React.FC = () => {
             </TabsContent>
 
             <TabsContent value="exercises" className="space-y-6">
-              <ExerciseSelector 
-                onExerciseSelect={(exercise) => {
-                  console.log('Selected exercise:', exercise);
-                  // TODO: Add muscle visualization integration
-                }}
-                showMuscleGroups={true}
+              <ExerciseWorkspace 
+                initialLayout="side-by-side"
+                showLayoutControls={true}
               />
             </TabsContent>
 
@@ -163,9 +160,7 @@ const Dashboard: React.FC = () => {
               <ProgressDashboard />
             </TabsContent>
 
-            <TabsContent value="debug" className="space-y-6">
-              <MuscleAPIDebug />
-            </TabsContent>
+
           </Tabs>
         </div>
       </main>
