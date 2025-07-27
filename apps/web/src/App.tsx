@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { User, Power, Dumbbell } from 'lucide-react';
+import { User, Power, Dumbbell, Target, TrendingUp, Trophy, Eye, BarChart3, Activity } from 'lucide-react';
 import { useAuth } from './contexts/AuthContext';
 import { AuthPage } from './pages/AuthPage';
 import { ExerciseWorkspace } from './components/exercises/ExerciseWorkspace';
@@ -84,54 +84,177 @@ const Dashboard: React.FC = () => {
 
             </TabsList>
 
-            <TabsContent value="overview" className="space-y-6">
+            <TabsContent value="overview" className="space-y-8">
+              {/* Hero Section */}
+              <div className="relative overflow-hidden rounded-3xl glass-card p-8 md:p-12">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="p-3 rounded-2xl bg-primary/20 backdrop-blur-sm">
+                      <Dumbbell className="w-8 h-8 text-primary" />
+                    </div>
+                    <div>
+                      <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                        Welcome to RepFlow
+                      </h1>
+                      <p className="text-lg text-muted-foreground">
+                        Breathe, Train, Conquer - Your AI-powered fitness companion
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary mb-2">500+</div>
+                      <div className="text-sm text-muted-foreground">Exercises Available</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary mb-2">AI</div>
+                      <div className="text-sm text-muted-foreground">Muscle Visualization</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary mb-2">24/7</div>
+                      <div className="text-sm text-muted-foreground">Progress Tracking</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Card 
+                  className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group"
+                  onClick={() => setActiveTab('exercises')}
+                >
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/30 transition-colors">
+                      <Target className="w-6 h-6 text-blue-400" />
+                    </div>
+                    <h3 className="font-semibold text-foreground mb-2">Explore Exercises</h3>
+                    <p className="text-sm text-muted-foreground">Browse our AI-powered exercise library</p>
+                  </CardContent>
+                </Card>
+
+                <Card 
+                  className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group"
+                  onClick={() => setActiveTab('workouts')}
+                >
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
+                      <Dumbbell className="w-6 h-6 text-green-400" />
+                    </div>
+                    <h3 className="font-semibold text-foreground mb-2">Start Workout</h3>
+                    <p className="text-sm text-muted-foreground">Create and log your training sessions</p>
+                  </CardContent>
+                </Card>
+
+                <Card 
+                  className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group"
+                  onClick={() => setActiveTab('progress')}
+                >
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/30 transition-colors">
+                      <TrendingUp className="w-6 h-6 text-purple-400" />
+                    </div>
+                    <h3 className="font-semibold text-foreground mb-2">View Progress</h3>
+                    <p className="text-sm text-muted-foreground">Track your fitness journey</p>
+                  </CardContent>
+                </Card>
+
+                <Card 
+                  className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group"
+                  onClick={() => setActiveTab('achievements')}
+                >
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-orange-500/20 flex items-center justify-center group-hover:bg-orange-500/30 transition-colors">
+                      <Trophy className="w-6 h-6 text-orange-400" />
+                    </div>
+                    <h3 className="font-semibold text-foreground mb-2">Achievements</h3>
+                    <p className="text-sm text-muted-foreground">Unlock badges and milestones</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Feature Highlights */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <Card className="glass-card">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-foreground">
+                      <div className="p-2 rounded-lg bg-primary/20">
+                        <Eye className="w-5 h-5 text-primary" />
+                      </div>
+                      AI Muscle Visualization
+                    </CardTitle>
+                    <CardDescription>Revolutionary real-time muscle group highlighting</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4">
+                      See exactly which muscles you're targeting with our AI-powered visualization system. 
+                      Select any exercise and watch as the corresponding muscle groups light up in real-time.
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setActiveTab('exercises')}
+                      className="w-full"
+                    >
+                      Try Visualization →
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card className="glass-card">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-foreground">
+                      <div className="p-2 rounded-lg bg-primary/20">
+                        <BarChart3 className="w-5 h-5 text-primary" />
+                      </div>
+                      Smart Progress Tracking
+                    </CardTitle>
+                    <CardDescription>Comprehensive analytics for your fitness journey</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4">
+                      Track your workouts, monitor your progress, and achieve your goals with detailed 
+                      analytics, personal records, and intelligent insights.
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setActiveTab('progress')}
+                      className="w-full"
+                    >
+                      View Analytics →
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Recent Activity Placeholder */}
               <Card className="glass-card">
                 <CardHeader>
-                  <CardTitle className="text-foreground text-2xl">Welcome to RepFlow!</CardTitle>
-                  <CardDescription className="text-muted-foreground">Your comprehensive fitness tracking platform</CardDescription>
+                  <CardTitle className="text-foreground">Recent Activity</CardTitle>
+                  <CardDescription>Your latest fitness achievements</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-foreground">💪 Exercise Database & Muscle Visualization</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Browse our comprehensive exercise library with real-time muscle group visualization powered by AI
-                      </p>
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted/20 flex items-center justify-center">
+                      <Activity className="w-8 h-8 text-muted-foreground" />
                     </div>
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-foreground">🎯 Custom Workout Builder</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Create personalized workout routines tailored to your fitness goals
-                      </p>
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-foreground">📊 Workout Logging & Progress Tracking</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Log your workouts and track your progress over time
-                      </p>
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-foreground">📅 Weekly Planning & Calendar</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Plan your workouts for the week with our calendar interface
-                      </p>
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-foreground">🏆 Gamification & Achievements</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Earn badges and level up your fitness journey
-                      </p>
-                    </div>
+                    <h3 className="font-medium text-foreground mb-2">Start Your Fitness Journey</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Complete your first workout to see your activity here
+                    </p>
+                    <Button onClick={() => setActiveTab('workouts')}>
+                      Create First Workout
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
             <TabsContent value="exercises" className="space-y-6">
-              <ExerciseWorkspace 
-                initialLayout="side-by-side"
-                showLayoutControls={true}
-              />
+              <ExerciseWorkspace />
             </TabsContent>
 
             <TabsContent value="profile" className="space-y-6">

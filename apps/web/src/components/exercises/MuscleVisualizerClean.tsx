@@ -212,7 +212,7 @@ export const MuscleVisualizerClean: React.FC<MuscleVisualizerCleanProps> = ({
                         console.error('Image failed to load:', e);
                       }}
                       onLoad={() => {
-                        console.log('Image loaded successfully');
+                        // Image loaded successfully
                       }}
                     />
                     
