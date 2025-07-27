@@ -98,26 +98,26 @@ export const ProfileUpdateForm: React.FC<ProfileUpdateFormProps> = ({ onSuccess 
   ];
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="glass-card w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-foreground">
           <User className="h-5 w-5" />
           Update Profile
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-muted-foreground">
           Customize your profile to get personalized workout recommendations
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {error && (
-            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+            <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="p-3 text-sm text-green-600 bg-green-50 border border-green-200 rounded-md">
+            <div className="p-3 text-sm text-green-700 bg-green-500/10 border border-green-500/20 rounded-md">
               {success}
             </div>
           )}

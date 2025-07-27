@@ -61,6 +61,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         case 'auth/too-many-requests':
           setError('Too many failed attempts. Please try again later.');
           break;
+        case 'auth/network-request-failed':
+          setError('Network error. Please check your connection and try again.');
+          break;
         default:
           setError('Login failed. Please check your credentials and try again.');
       }
@@ -70,96 +73,111 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="glass-card w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
-        <CardDescription className="text-center">
+        <CardTitle className="text-2xl font-bold text-center text-foreground">
+          Welcome Back
+        </CardTitle>
+        <CardDescription className="text-center text-muted-foreground">
           Sign in to your RepFlow account
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {error && (
-            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-              {error}
-            </div>
-          )}
-
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-sm font-medium text-foreground">
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
               placeholder="Enter your email"
+              className="glass transition-all duration-200 focus:ring-2 focus:ring-primary/50"
               {...register('email')}
-              className={errors.email ? 'border-red-500' : ''}
             />
             {errors.email && (
-              <p className="text-sm text-red-600">{errors.email.message}</p>
+              <p className="text-sm text-destructive">{errors.email.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-sm font-medium text-foreground">
+              Password
+            </Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Enter your password"
+                className="glass pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/50"
                 {...register('password')}
-                className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-200"
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
             {errors.password && (
-              <p className="text-sm text-red-600">{errors.password.message}</p>
+              <p className="text-sm text-destructive">{errors.password.message}</p>
             )}
           </div>
 
-          <div className="flex items-center justify-between">
-            <button
-              type="button"
-              onClick={onSwitchToReset}
-              className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
-            >
-              Forgot password?
-            </button>
-          </div>
+          {error && (
+            <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <p className="text-sm text-destructive">{error}</p>
+            </div>
+          )}
 
           <Button
             type="submit"
-            className="w-full"
+            className="w-full transition-all duration-300 transform hover:scale-105 active:scale-95"
             disabled={isLoading}
           >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing in...
+                Signing In...
               </>
             ) : (
               'Sign In'
             )}
           </Button>
+        </form>
+
+        <div className="space-y-4 pt-4">
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={onSwitchToReset}
+              className="text-sm text-primary hover:text-primary/80 transition-colors duration-200"
+            >
+              Forgot your password?
+            </button>
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or</span>
+            </div>
+          </div>
 
           <div className="text-center">
-            <span className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <button
-                type="button"
-                onClick={onSwitchToRegister}
-                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-              >
-                Sign up
-              </button>
-            </span>
+            <span className="text-sm text-muted-foreground">Don't have an account? </span>
+            <button
+              type="button"
+              onClick={onSwitchToRegister}
+              className="text-sm font-medium text-primary hover:text-primary/80 transition-colors duration-200"
+            >
+              Sign up
+            </button>
           </div>
-        </form>
+        </div>
       </CardContent>
     </Card>
   );
