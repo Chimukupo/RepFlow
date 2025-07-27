@@ -11,6 +11,7 @@ import { GoalManager } from './components/goals/GoalManager';
 import { BMICalculator } from './components/health/BMICalculator';
 import { ProgressDashboard } from './components/analytics/ProgressDashboard';
 import { ProfileUpdateForm } from './components/profile/ProfileUpdateForm';
+import { AchievementDashboard } from './components/achievements/AchievementDashboard';
 import { LandingPage } from './components/LandingPage';
 import { AuthGuard } from './components/auth/AuthGuard';
 
@@ -74,8 +75,9 @@ const Dashboard: React.FC = () => {
             <TabsList className="glass-card grid w-full grid-cols-8 p-1.5 mb-8 shadow-sm">
               <TabsTrigger value="overview" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Overview</TabsTrigger>
               <TabsTrigger value="exercises" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Exercises</TabsTrigger>
-              <TabsTrigger value="workouts" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Workouts</TabsTrigger>
+              <TabsTrigger value="workouts" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state-active]:shadow-sm font-medium">Workouts</TabsTrigger>
               <TabsTrigger value="goals" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Goals</TabsTrigger>
+              <TabsTrigger value="achievements" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Achievements</TabsTrigger>
               <TabsTrigger value="health" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Health</TabsTrigger>
               <TabsTrigger value="progress" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Progress</TabsTrigger>
               <TabsTrigger value="profile" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Profile</TabsTrigger>
@@ -150,6 +152,10 @@ const Dashboard: React.FC = () => {
 
             <TabsContent value="goals" className="space-y-6">
               <GoalManager />
+            </TabsContent>
+
+            <TabsContent value="achievements" className="space-y-6">
+              <AchievementDashboard />
             </TabsContent>
 
             <TabsContent value="health" className="space-y-6">
