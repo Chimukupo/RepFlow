@@ -1,8 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
-import { env } from '../env';
+import { env } from '../env'; // Ensure T3 Env is set up
 
 const firebaseConfig = {
   apiKey: env.VITE_FIREBASE_API_KEY,
@@ -14,10 +11,4 @@ const firebaseConfig = {
   measurementId: env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
