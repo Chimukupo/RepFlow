@@ -33,6 +33,7 @@ import { WorkoutAPIv2 } from '@/lib/api/workouts-v2';
 import { useQuery } from '@tanstack/react-query';
 import { WorkoutHistory } from './WorkoutHistory';
 import { PersonalRecords } from './PersonalRecords';
+import { DataExportManager } from './DataExportManager';
 // Types are used in the component
 
 // Register Chart.js components
@@ -411,6 +412,10 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({ className 
             <Trophy className="w-4 h-4" />
             <span className="hidden sm:inline">Records</span>
           </TabsTrigger>
+          <TabsTrigger value="export" className="flex items-center gap-2">
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline">Export</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="frequency" className="space-y-4">
@@ -476,6 +481,10 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({ className 
 
         <TabsContent value="records" className="space-y-4">
           <PersonalRecords />
+        </TabsContent>
+
+        <TabsContent value="export" className="space-y-4">
+          <DataExportManager />
         </TabsContent>
       </Tabs>
 
