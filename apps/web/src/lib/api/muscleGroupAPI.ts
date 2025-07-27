@@ -191,7 +191,7 @@ export class MuscleGroupAPI {
     // Check cache first
     const cached = this.cache.get(cacheKey);
     if (cached) {
-      return cached;
+      return cached as T;
     }
 
     // Rate limiting
@@ -241,7 +241,7 @@ export class MuscleGroupAPI {
     // Check cache first
     const cached = this.cache.get(cacheKey);
     if (cached) {
-      return cached;
+      return cached as ImageResponse;
     }
 
     // Rate limiting

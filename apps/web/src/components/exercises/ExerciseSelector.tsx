@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, Zap, Dumbbell, Target, Users, Clock, TrendingUp, Star } from 'lucide-react';
+import { Search, Filter, Zap, Dumbbell, Target, Users, Clock, TrendingUp, Star, Plus } from 'lucide-react';
 import { 
   EXERCISES, 
   searchExercises 
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useMuscleGroupImages } from '@/hooks/useMuscleGroupImage';
 import { ExerciseDetailModal } from './ExerciseDetailModal';
+import { CustomExerciseFormSimple } from './CustomExerciseFormSimple';
 
 interface ExerciseSelectorProps {
   onExerciseSelect?: (exercise: Exercise) => void;
@@ -39,6 +40,7 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
   });
   const [showFilters, setShowFilters] = useState(false);
   const [selectedExerciseForDetail, setSelectedExerciseForDetail] = useState<Exercise | null>(null);
+  const [showCustomExerciseForm, setShowCustomExerciseForm] = useState(false);
 
   // Get unique values for filter dropdowns
   const categories = [...new Set(EXERCISES.map(e => e.category))] as ExerciseCategory[];
@@ -115,14 +117,23 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
             </p>
           </div>
                    
-           <Button
-             onClick={() => setShowFilters(!showFilters)}
-             variant="outline"
-             className="glass flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95"
-           >
-             <Filter className="w-4 h-4" />
-             {showFilters ? 'Hide Filters' : 'Show Filters'}
-           </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => setShowCustomExerciseForm(true)}
+              className="flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95"
+            >
+              <Plus className="w-4 h-4" />
+              Create Exercise
+            </Button>
+            <Button
+              onClick={() => setShowFilters(!showFilters)}
+              variant="outline"
+              className="glass flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95"
+            >
+              <Filter className="w-4 h-4" />
+              {showFilters ? 'Hide Filters' : 'Show Filters'}
+            </Button>
+          </div>
         </div>
 
         {/* Search Bar */}
@@ -474,6 +485,21 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
          isOpen={!!selectedExerciseForDetail}
          onClose={() => setSelectedExerciseForDetail(null)}
        />
+
+       {/* Custom Exercise Form Modal */}
+       {showCustomExerciseForm && (
+         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+           <div className="bg-background rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+             <CustomExerciseFormSimple
+               onSuccess={() => {
+                 setShowCustomExerciseForm(false);
+                 // Optionally refresh exercise list here
+               }}
+               onCancel={() => setShowCustomExerciseForm(false)}
+             />
+           </div>
+         </div>
+       )}
      </div>
    );
 }; 

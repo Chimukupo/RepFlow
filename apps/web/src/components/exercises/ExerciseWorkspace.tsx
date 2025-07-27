@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Dumbbell, Eye, Grid, LayoutGrid, Maximize2 } from 'lucide-react';
 import { ExerciseSelector } from './ExerciseSelector';
 import { MuscleVisualizerSimple } from './MuscleVisualizerSimple';
+import { MuscleVisualizerClean } from './MuscleVisualizerClean';
 import type { Exercise } from 'shared/data/exercise-types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -65,9 +66,9 @@ export const ExerciseWorkspace: React.FC<ExerciseWorkspaceProps> = ({
         };
       case 'visualizer-focus':
         return {
-          container: 'grid grid-cols-1 lg:grid-cols-3 gap-6',
-          selectorWrapper: 'lg:col-span-1 lg:max-h-[600px] lg:overflow-y-auto',
-          visualizerWrapper: 'lg:col-span-2'
+          container: 'grid grid-cols-1 lg:grid-cols-4 gap-6',
+          selectorWrapper: 'lg:col-span-1 lg:max-h-[700px] lg:overflow-y-auto',
+          visualizerWrapper: 'lg:col-span-3'
         };
       case 'selector-focus':
         return {
@@ -183,20 +184,22 @@ export const ExerciseWorkspace: React.FC<ExerciseWorkspaceProps> = ({
         {/* Exercise Selector */}
         <div className={layoutClasses.selectorWrapper}>
           <Card className="h-full">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2">
+            <CardHeader className={layout === 'visualizer-focus' ? "pb-3" : "pb-4"}>
+              <CardTitle className={`flex items-center gap-2 ${layout === 'visualizer-focus' ? 'text-lg' : ''}`}>
                 <Grid className="w-5 h-5" />
-                Exercise Library
+                {layout === 'visualizer-focus' ? 'Exercises' : 'Exercise Library'}
               </CardTitle>
-              <CardDescription>
-                Browse and select exercises to visualize targeted muscle groups
-              </CardDescription>
+              {layout !== 'visualizer-focus' && (
+                <CardDescription>
+                  Browse and select exercises to visualize targeted muscle groups
+                </CardDescription>
+              )}
             </CardHeader>
             <CardContent className="pt-0">
               <ExerciseSelector
                 onExerciseSelect={handleExerciseSelect}
                 selectedExercises={selectedExercises}
-                showMuscleGroups={true}
+                showMuscleGroups={layout !== 'visualizer-focus'}
               />
             </CardContent>
           </Card>
@@ -204,25 +207,34 @@ export const ExerciseWorkspace: React.FC<ExerciseWorkspaceProps> = ({
 
         {/* Muscle Visualizer */}
         <div className={layoutClasses.visualizerWrapper}>
-          <Card className="h-full">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2">
-                <Eye className="w-5 h-5" />
-                Muscle Visualization
-              </CardTitle>
-              <CardDescription>
-                Real-time muscle group highlighting based on your exercise selection
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <MuscleVisualizerSimple
-                selectedExercises={selectedExercises}
-                onImageLoad={(imageUrl: string) => {
-                  console.log('Muscle visualization loaded:', imageUrl);
-                }}
-              />
-            </CardContent>
-          </Card>
+          {layout === 'visualizer-focus' ? (
+            <MuscleVisualizerClean
+              selectedExercises={selectedExercises}
+              onImageLoad={(imageUrl: string) => {
+                console.log('Muscle visualization loaded:', imageUrl);
+              }}
+            />
+          ) : (
+            <Card className="h-full">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2">
+                  <Eye className="w-5 h-5" />
+                  Muscle Visualization
+                </CardTitle>
+                <CardDescription>
+                  Real-time muscle group highlighting based on your exercise selection
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <MuscleVisualizerSimple
+                  selectedExercises={selectedExercises}
+                  onImageLoad={(imageUrl: string) => {
+                    console.log('Muscle visualization loaded:', imageUrl);
+                  }}
+                />
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
 
