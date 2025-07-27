@@ -4,7 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "deploy:staging": "pnpm run build && firebase deploy --only hosting:rep-flow-staging --project rep-flow-staging",
+    "deploy:prod": "pnpm run build && firebase deploy --only hosting:rep-flow-prod --project rep-flow-prod",
+    "deploy:staging:rules": "firebase use rep-flow-staging && firebase deploy --only firestore:rules,firestore:indexes",
+    "deploy:prod:rules": "firebase use rep-flow-prod && firebase deploy --only firestore:rules,firestore:indexes",
+    "deploy:all:rules": "pnpm run deploy:staging:rules && pnpm run deploy:prod:rules"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +21,8 @@
   "packageManager": "pnpm@10.13.1",
   "devDependencies": {
     "pnpm": "^10.13.1"
+  },
+  "dependencies": {
+    "turbo": "^2.5.5"
   }
 }

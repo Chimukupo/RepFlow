@@ -1,0 +1,228 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions for validation
+    function isValidString(value, minLen, maxLen) {
+      return value is string && value.size() >= minLen && value.size() <= maxLen;
+    }
+    
+    function isValidNumber(value, min, max) {
+      return value is number && value >= min && value <= max;
+    }
+    
+    function isValidArray(value, minLen, maxLen) {
+      return value is list && value.size() >= minLen && value.size() <= maxLen;
+    }
+    
+    function isValidMuscleGroup(group) {
+      return group in ['chest', 'back', 'shoulders', 'biceps', 'triceps', 'forearms', 
+                      'abs', 'obliques', 'quads', 'hamstrings', 'glutes', 'calves', 
+                      'traps', 'lats', 'delts'];
+    }
+    
+    function isValidExerciseType(type) {
+      return type in ['strength', 'cardio', 'flexibility', 'balance', 'sports'];
+    }
+    
+    function isValidUnits(units) {
+      return units in ['metric', 'imperial'];
+    }
+    
+    function isValidGoalCategory(category) {
+      return category in ['strength', 'endurance', 'weight_loss', 'muscle_gain', 
+                         'flexibility', 'general_fitness', 'sport_specific', 'rehabilitation'];
+    }
+    
+    function isValidGoalType(type) {
+      return type in ['weight_target', 'rep_target', 'duration_target', 'frequency_target',
+                     'body_weight', 'body_fat', 'distance', 'custom'];
+    }
+    
+    function isValidGoalStatus(status) {
+      return status in ['active', 'completed', 'paused', 'cancelled'];
+    }
+    
+    function isValidBMICategory(category) {
+      return category in ['underweight', 'normal_weight', 'overweight', 
+                         'obese_class_1', 'obese_class_2', 'obese_class_3'];
+    }
+
+    // Users collection with enhanced validation
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+      
+      allow create: if request.auth != null 
+        && request.auth.uid == uid
+        && isValidString(resource.data.email, 5, 100)
+        && (resource.data.displayName == null || isValidString(resource.data.displayName, 2, 50))
+        && (resource.data.weight == null || isValidNumber(resource.data.weight, 20, 500))
+        && (resource.data.height == null || isValidNumber(resource.data.height, 50, 300))
+        && (resource.data.age == null || isValidNumber(resource.data.age, 13, 120))
+        && (resource.data.units == null || isValidUnits(resource.data.units))
+        && resource.data.createdAt is timestamp
+        && resource.data.updatedAt is timestamp;
+        
+      allow update: if request.auth != null 
+        && request.auth.uid == uid
+        && (request.resource.data.displayName == null || isValidString(request.resource.data.displayName, 2, 50))
+        && (request.resource.data.weight == null || isValidNumber(request.resource.data.weight, 20, 500))
+        && (request.resource.data.height == null || isValidNumber(request.resource.data.height, 50, 300))
+        && (request.resource.data.age == null || isValidNumber(request.resource.data.age, 13, 120))
+        && (request.resource.data.units == null || isValidUnits(request.resource.data.units))
+        && request.resource.data.updatedAt is timestamp;
+    }
+
+    // Workouts collection with comprehensive validation
+    match /workouts/{workoutId} {
+      allow read, write: if request.auth != null && resource.data.user_id == request.auth.uid;
+      
+      allow create: if request.auth != null 
+        && request.resource.data.user_id == request.auth.uid
+        && isValidString(request.resource.data.name, 2, 100)
+        && request.resource.data.date is timestamp
+        && isValidArray(request.resource.data.exercises, 1, 50)
+        && (request.resource.data.duration == null || isValidNumber(request.resource.data.duration, 1, 28800))
+        && (request.resource.data.notes == null || isValidString(request.resource.data.notes, 0, 1000))
+        && request.resource.data.is_template is bool
+        && request.resource.data.created_at is timestamp
+        && request.resource.data.updated_at is timestamp;
+        
+      allow update: if request.auth != null 
+        && resource.data.user_id == request.auth.uid
+        && request.resource.data.user_id == request.auth.uid
+        && (request.resource.data.name == null || isValidString(request.resource.data.name, 2, 100))
+        && (request.resource.data.exercises == null || isValidArray(request.resource.data.exercises, 1, 50))
+        && (request.resource.data.duration == null || isValidNumber(request.resource.data.duration, 1, 28800))
+        && (request.resource.data.notes == null || isValidString(request.resource.data.notes, 0, 1000))
+        && request.resource.data.updated_at is timestamp;
+    }
+
+    // Routines collection with validation
+    match /routines/{routineId} {
+      allow read, write: if request.auth != null && resource.data.user_id == request.auth.uid;
+      
+      allow create: if request.auth != null 
+        && request.resource.data.user_id == request.auth.uid
+        && isValidString(request.resource.data.name, 2, 100)
+        && (request.resource.data.description == null || isValidString(request.resource.data.description, 0, 500))
+        && isValidArray(request.resource.data.exercises, 1, 50)
+        && isValidArray(request.resource.data.schedule, 1, 7)
+        && (request.resource.data.estimated_duration == null || isValidNumber(request.resource.data.estimated_duration, 5, 28800))
+        && request.resource.data.is_public is bool
+        && request.resource.data.created_at is timestamp
+        && request.resource.data.updated_at is timestamp;
+        
+      allow update: if request.auth != null 
+        && resource.data.user_id == request.auth.uid
+        && request.resource.data.user_id == request.auth.uid
+        && (request.resource.data.name == null || isValidString(request.resource.data.name, 2, 100))
+        && (request.resource.data.description == null || isValidString(request.resource.data.description, 0, 500))
+        && (request.resource.data.exercises == null || isValidArray(request.resource.data.exercises, 1, 50))
+        && (request.resource.data.schedule == null || isValidArray(request.resource.data.schedule, 1, 7))
+        && request.resource.data.updated_at is timestamp;
+    }
+
+    // Goals collection with detailed validation
+    match /goals/{goalId} {
+      allow read, write: if request.auth != null && resource.data.user_id == request.auth.uid;
+      
+      allow create: if request.auth != null 
+        && request.resource.data.user_id == request.auth.uid
+        && isValidString(request.resource.data.title, 2, 100)
+        && (request.resource.data.description == null || isValidString(request.resource.data.description, 0, 500))
+        && isValidGoalCategory(request.resource.data.category)
+        && isValidGoalType(request.resource.data.type)
+        && isValidNumber(request.resource.data.target_value, 0, 999999)
+        && isValidNumber(request.resource.data.current_value, 0, 999999)
+        && isValidString(request.resource.data.unit, 1, 20)
+        && request.resource.data.target_date is timestamp
+        && request.resource.data.is_public is bool
+        && isValidNumber(request.resource.data.progress_percentage, 0, 100)
+        && request.resource.data.created_at is timestamp
+        && request.resource.data.updated_at is timestamp;
+        
+      allow update: if request.auth != null 
+        && resource.data.user_id == request.auth.uid
+        && request.resource.data.user_id == request.auth.uid
+        && (request.resource.data.title == null || isValidString(request.resource.data.title, 2, 100))
+        && (request.resource.data.description == null || isValidString(request.resource.data.description, 0, 500))
+        && (request.resource.data.status == null || isValidGoalStatus(request.resource.data.status))
+        && (request.resource.data.current_value == null || isValidNumber(request.resource.data.current_value, 0, 999999))
+        && (request.resource.data.progress_percentage == null || isValidNumber(request.resource.data.progress_percentage, 0, 100))
+        && request.resource.data.updated_at is timestamp;
+    }
+
+    // BMI History collection with validation
+    match /bmi_history/{bmiId} {
+      allow read, write: if request.auth != null && resource.data.user_id == request.auth.uid;
+      
+      allow create: if request.auth != null 
+        && request.resource.data.user_id == request.auth.uid
+        && isValidNumber(request.resource.data.weight, 20, 1000)
+        && isValidNumber(request.resource.data.height, 50, 300)
+        && isValidUnits(request.resource.data.units)
+        && isValidNumber(request.resource.data.bmi, 10, 100)
+        && isValidBMICategory(request.resource.data.category)
+        && request.resource.data.recorded_at is timestamp
+        && (request.resource.data.notes == null || isValidString(request.resource.data.notes, 0, 300))
+        && request.resource.data.created_at is timestamp
+        && request.resource.data.updated_at is timestamp;
+        
+      allow update: if request.auth != null 
+        && resource.data.user_id == request.auth.uid
+        && request.resource.data.user_id == request.auth.uid
+        && (request.resource.data.weight == null || isValidNumber(request.resource.data.weight, 20, 1000))
+        && (request.resource.data.height == null || isValidNumber(request.resource.data.height, 50, 300))
+        && (request.resource.data.units == null || isValidUnits(request.resource.data.units))
+        && (request.resource.data.notes == null || isValidString(request.resource.data.notes, 0, 300))
+        && request.resource.data.updated_at is timestamp;
+    }
+
+    // New workouts-v2 collection for modern workout builder
+    match /workouts-v2/{workoutId} {
+      allow read, write: if request.auth != null && resource.data.createdBy == request.auth.uid;
+      
+      allow create: if request.auth != null 
+        && request.resource.data.createdBy == request.auth.uid
+        && isValidString(request.resource.data.name, 1, 100)
+        && (request.resource.data.description == null || isValidString(request.resource.data.description, 0, 500))
+        && request.resource.data.exercises is list
+        && (request.resource.data.tags == null || request.resource.data.tags is list)
+        && (request.resource.data.estimatedDuration == null || isValidNumber(request.resource.data.estimatedDuration, 0, 600))
+        && (request.resource.data.difficulty == null || request.resource.data.difficulty in ['beginner', 'intermediate', 'advanced'])
+        && (request.resource.data.category == null || request.resource.data.category in ['strength', 'cardio', 'flexibility', 'mixed'])
+        && request.resource.data.isTemplate is bool
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.updatedAt is timestamp;
+        
+      allow update: if request.auth != null 
+        && resource.data.createdBy == request.auth.uid
+        && request.resource.data.createdBy == request.auth.uid
+        && (request.resource.data.name == null || isValidString(request.resource.data.name, 1, 100))
+        && (request.resource.data.description == null || isValidString(request.resource.data.description, 0, 500))
+        && (request.resource.data.exercises == null || request.resource.data.exercises is list)
+        && (request.resource.data.tags == null || request.resource.data.tags is list)
+        && (request.resource.data.estimatedDuration == null || isValidNumber(request.resource.data.estimatedDuration, 0, 600))
+        && (request.resource.data.difficulty == null || request.resource.data.difficulty in ['beginner', 'intermediate', 'advanced'])
+        && (request.resource.data.category == null || request.resource.data.category in ['strength', 'cardio', 'flexibility', 'mixed'])
+        && request.resource.data.updatedAt is timestamp;
+    }
+
+    // Workout sessions collection for tracking workout performance
+    match /workout-sessions/{sessionId} {
+      allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
+      
+      allow create: if request.auth != null 
+        && (request.resource.data.userId == null || request.resource.data.userId == request.auth.uid)
+        && isValidString(request.resource.data.workoutId, 1, 50)
+        && isValidString(request.resource.data.workoutName, 1, 100)
+        && request.resource.data.startTime is timestamp
+        && (request.resource.data.endTime == null || request.resource.data.endTime is timestamp)
+        && request.resource.data.exercises is list
+        && (request.resource.data.totalDuration == null || isValidNumber(request.resource.data.totalDuration, 0, 600))
+        && (request.resource.data.notes == null || isValidString(request.resource.data.notes, 0, 1000))
+        && request.resource.data.completed is bool;
+    }
+  }
+}
