@@ -91,11 +91,11 @@ export const ExerciseWorkspace: React.FC<ExerciseWorkspaceProps> = ({
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <Dumbbell className="w-8 h-8 text-blue-600" />
+          <h1 className="text-4xl font-bold text-foreground flex items-center gap-3">
+            <Dumbbell className="w-8 h-8 text-primary" />
             Exercise & Muscle Visualization
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-muted-foreground mt-2">
             Select exercises to see real-time muscle group visualization
           </p>
         </div>

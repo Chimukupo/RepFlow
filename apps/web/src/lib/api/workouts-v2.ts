@@ -40,19 +40,29 @@ const convertFirestoreWorkout = (doc: any): Workout => {
 
 // Helper to convert Workout to Firestore data
 const convertWorkoutToFirestore = (workout: Omit<Workout, 'id'>) => {
-  return {
+  const data: any = {
     name: workout.name,
-    description: workout.description,
     exercises: workout.exercises,
     tags: workout.tags || [],
     estimatedDuration: workout.estimatedDuration,
-    difficulty: workout.difficulty,
-    category: workout.category,
     isTemplate: workout.isTemplate || false,
     createdAt: Timestamp.fromDate(workout.createdAt),
     updatedAt: Timestamp.fromDate(workout.updatedAt),
     createdBy: workout.createdBy,
   };
+
+  // Only add optional fields if they have values
+  if (workout.description) {
+    data.description = workout.description;
+  }
+  if (workout.difficulty) {
+    data.difficulty = workout.difficulty;
+  }
+  if (workout.category) {
+    data.category = workout.category;
+  }
+
+  return data;
 };
 
 export class WorkoutAPIv2 {

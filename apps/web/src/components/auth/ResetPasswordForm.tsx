@@ -54,6 +54,9 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
         case 'auth/too-many-requests':
           setError('Too many requests. Please try again later.');
           break;
+        case 'auth/network-request-failed':
+          setError('Network error. Please check your connection and try again.');
+          break;
         default:
           setError('Failed to send reset email. Please try again.');
       }
@@ -64,31 +67,39 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
 
   if (success) {
     return (
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="glass-card w-full max-w-md mx-auto">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
             <CheckCircle2 className="h-12 w-12 text-green-500" />
           </div>
-          <CardTitle className="text-2xl font-bold text-center">Check Your Email</CardTitle>
-          <CardDescription className="text-center">
+          <CardTitle className="text-2xl font-bold text-center text-foreground">Check Your Email</CardTitle>
+          <CardDescription className="text-center text-muted-foreground">
             We've sent a password reset link to your email address
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="space-y-4">
-            <p className="text-sm text-gray-600 text-center">
+            <p className="text-sm text-muted-foreground text-center">
               Click the link in the email to reset your password. If you don't see it, check your spam folder.
             </p>
             
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={onBackToLogin}
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Sign In
-            </Button>
+            <div className="space-y-3">
+              <Button
+                onClick={onBackToLogin}
+                className="w-full transition-all duration-300 transform hover:scale-105 active:scale-95"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Sign In
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => setSuccess(false)}
+                className="w-full glass transition-all duration-300 transform hover:scale-105 active:scale-95"
+              >
+                Send Another Email
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -96,59 +107,63 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="glass-card w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Reset Password</CardTitle>
-        <CardDescription className="text-center">
-          Enter your email address and we'll send you a reset link
+        <CardTitle className="text-2xl font-bold text-center text-foreground">Reset Password</CardTitle>
+        <CardDescription className="text-center text-muted-foreground">
+          Enter your email address and we'll send you a link to reset your password
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {error && (
-            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-              {error}
-            </div>
-          )}
-
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-sm font-medium text-foreground">
+              Email Address
+            </Label>
             <Input
               id="email"
               type="email"
               placeholder="Enter your email address"
+              className="glass transition-all duration-200 focus:ring-2 focus:ring-primary/50"
               {...register('email')}
-              className={errors.email ? 'border-red-500' : ''}
             />
             {errors.email && (
-              <p className="text-sm text-red-600">{errors.email.message}</p>
+              <p className="text-sm text-destructive">{errors.email.message}</p>
             )}
           </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Sending reset link...
-              </>
-            ) : (
-              'Send Reset Link'
-            )}
-          </Button>
+          {error && (
+            <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <p className="text-sm text-destructive">{error}</p>
+            </div>
+          )}
 
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={onBackToLogin}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Sign In
-          </Button>
+          <div className="space-y-3">
+            <Button
+              type="submit"
+              className="w-full transition-all duration-300 transform hover:scale-105 active:scale-95"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sending Reset Link...
+                </>
+              ) : (
+                'Send Reset Link'
+              )}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onBackToLogin}
+              className="w-full glass transition-all duration-300 transform hover:scale-105 active:scale-95"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Sign In
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>

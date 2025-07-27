@@ -84,6 +84,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         case 'auth/weak-password':
           setError('Password is too weak. Please choose a stronger password.');
           break;
+        case 'auth/network-request-failed':
+          setError('Network error. Please check your connection and try again.');
+          break;
         default:
           setError('Registration failed. Please try again.');
       }
@@ -93,65 +96,59 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="glass-card w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Create Account</CardTitle>
-        <CardDescription className="text-center">
+        <CardTitle className="text-2xl font-bold text-center text-foreground">Create Account</CardTitle>
+        <CardDescription className="text-center text-muted-foreground">
           Join RepFlow and start your fitness journey
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {error && (
-            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-              {error}
-            </div>
-          )}
-
           <div className="space-y-2">
-            <Label htmlFor="displayName">Full Name</Label>
+            <Label htmlFor="displayName" className="text-sm font-medium text-foreground">Full Name</Label>
             <Input
               id="displayName"
               type="text"
               placeholder="Enter your full name"
               {...register('displayName')}
-              className={errors.displayName ? 'border-red-500' : ''}
+              className="glass transition-all duration-200 focus:ring-2 focus:ring-primary/50"
             />
             {errors.displayName && (
-              <p className="text-sm text-red-600">{errors.displayName.message}</p>
+              <p className="text-sm text-destructive">{errors.displayName.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-sm font-medium text-foreground">Email</Label>
             <Input
               id="email"
               type="email"
               placeholder="Enter your email"
               {...register('email')}
-              className={errors.email ? 'border-red-500' : ''}
+              className="glass transition-all duration-200 focus:ring-2 focus:ring-primary/50"
             />
             {errors.email && (
-              <p className="text-sm text-red-600">{errors.email.message}</p>
+              <p className="text-sm text-destructive">{errors.email.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-sm font-medium text-foreground">Password</Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Create a strong password"
                 {...register('password')}
-                className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
+                className="glass pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/50"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-200"
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
             
@@ -169,19 +166,19 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                             : passwordStrength.score === 3
                             ? 'bg-yellow-500'
                             : 'bg-green-500'
-                          : 'bg-gray-200'
+                          : 'bg-muted'
                       }`}
                     />
                   ))}
                 </div>
                 {passwordStrength.feedback.length > 0 && (
-                  <div className="text-xs text-gray-600">
+                  <div className="text-xs text-muted-foreground">
                     Missing: {passwordStrength.feedback.join(', ')}
                   </div>
                 )}
                 {passwordStrength.score === 4 && (
-                  <div className="flex items-center text-xs text-green-600">
-                    <CheckCircle2 size={14} className="mr-1" />
+                  <div className="flex items-center text-xs text-green-500">
+                    <CheckCircle2 className="w-3 h-3 mr-1" />
                     Strong password
                   </div>
                 )}
@@ -189,61 +186,76 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             )}
             
             {errors.password && (
-              <p className="text-sm text-red-600">{errors.password.message}</p>
+              <p className="text-sm text-destructive">{errors.password.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">Confirm Password</Label>
             <div className="relative">
               <Input
                 id="confirmPassword"
                 type={showConfirmPassword ? 'text' : 'password'}
                 placeholder="Confirm your password"
                 {...register('confirmPassword')}
-                className={errors.confirmPassword ? 'border-red-500 pr-10' : 'pr-10'}
+                className="glass pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/50"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-200"
               >
-                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
+              <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
             )}
           </div>
 
+          {error && (
+            <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <p className="text-sm text-destructive">{error}</p>
+            </div>
+          )}
+
           <Button
             type="submit"
-            className="w-full"
+            className="w-full transition-all duration-300 transform hover:scale-105 active:scale-95"
             disabled={isLoading}
           >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating account...
+                Creating Account...
               </>
             ) : (
               'Create Account'
             )}
           </Button>
+        </form>
+
+        <div className="space-y-4 pt-4">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or</span>
+            </div>
+          </div>
 
           <div className="text-center">
-            <span className="text-sm text-gray-600">
-              Already have an account?{' '}
-              <button
-                type="button"
-                onClick={onSwitchToLogin}
-                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-              >
-                Sign in
-              </button>
-            </span>
+            <span className="text-sm text-muted-foreground">Already have an account? </span>
+            <button
+              type="button"
+              onClick={onSwitchToLogin}
+              className="text-sm font-medium text-primary hover:text-primary/80 transition-colors duration-200"
+            >
+              Sign in
+            </button>
           </div>
-        </form>
+        </div>
       </CardContent>
     </Card>
   );

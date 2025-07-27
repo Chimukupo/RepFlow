@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { WorkoutBuilder } from './WorkoutBuilder';
 import { WorkoutSession } from './WorkoutSession';
+import { WeeklyWorkoutPlanner } from './WeeklyWorkoutPlanner';
 import { WorkoutAPIv2 } from '@/lib/api/workouts-v2';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Workout } from 'shared/schemas/workout';
@@ -94,7 +95,8 @@ export const WorkoutManager: React.FC<WorkoutManagerProps> = ({
       if (existingIndex >= 0) {
         // Update existing workout
         console.log('Updating existing workout');
-        savedWorkout = await WorkoutAPIv2.updateWorkout(workout.id, workout);
+        const workoutToUpdate = { ...workout, createdBy: currentUser.uid };
+        savedWorkout = await WorkoutAPIv2.updateWorkout(workout.id, workoutToUpdate);
         setSavedWorkouts(prev => {
           const updated = [...prev];
           updated[existingIndex] = savedWorkout;
@@ -103,7 +105,8 @@ export const WorkoutManager: React.FC<WorkoutManagerProps> = ({
       } else {
         // Create new workout
         console.log('Creating new workout');
-        savedWorkout = await WorkoutAPIv2.createWorkout(currentUser.uid, workout);
+        const workoutToCreate = { ...workout, createdBy: currentUser.uid };
+        savedWorkout = await WorkoutAPIv2.createWorkout(currentUser.uid, workoutToCreate);
         console.log('Workout created successfully:', savedWorkout);
         setSavedWorkouts(prev => [...prev, savedWorkout]);
       }
@@ -276,8 +279,8 @@ export const WorkoutManager: React.FC<WorkoutManagerProps> = ({
       {/* Header */}
       <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div className="min-w-0">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Workouts</h2>
-          <p className="text-sm sm:text-base text-gray-600 mt-1">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground">Workouts</h2>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1">
             Create, manage, and start your workout routines
           </p>
         </div>
@@ -287,12 +290,13 @@ export const WorkoutManager: React.FC<WorkoutManagerProps> = ({
         </Button>
       </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="saved">My Workouts ({savedWorkouts.length})</TabsTrigger>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
-        </TabsList>
+             {/* Tabs */}
+       <Tabs value={activeTab} onValueChange={setActiveTab}>
+         <TabsList>
+           <TabsTrigger value="saved">My Workouts ({savedWorkouts.length})</TabsTrigger>
+           <TabsTrigger value="templates">Templates</TabsTrigger>
+           <TabsTrigger value="planner">Weekly Planner</TabsTrigger>
+         </TabsList>
 
         {/* Saved Workouts */}
         <TabsContent value="saved" className="space-y-4">
@@ -329,13 +333,13 @@ export const WorkoutManager: React.FC<WorkoutManagerProps> = ({
                      ) : (
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                {savedWorkouts.map((workout) => (
-                <Card key={workout.id} className="hover:shadow-md transition-shadow">
+                <Card key={workout.id} className="glass-card hover:shadow-lg transition-all duration-300 hover:scale-105">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div>
-                        <CardTitle className="text-lg">{workout.name}</CardTitle>
+                        <CardTitle className="text-lg text-foreground">{workout.name}</CardTitle>
                         {workout.description && (
-                          <p className="text-sm text-gray-600 mt-1">{workout.description}</p>
+                          <p className="text-sm text-muted-foreground mt-1">{workout.description}</p>
                         )}
                       </div>
                       {workout.difficulty && (
@@ -347,7 +351,7 @@ export const WorkoutManager: React.FC<WorkoutManagerProps> = ({
                   </CardHeader>
                   <CardContent className="space-y-4">
                                          {/* Workout Stats */}
-                     <div className="flex flex-wrap gap-3 text-sm text-gray-600">
+                     <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
                        <span className="flex items-center gap-1">
                          <Target className="w-3 h-3" />
                          {workout.exercises.length} exercises
@@ -456,8 +460,18 @@ export const WorkoutManager: React.FC<WorkoutManagerProps> = ({
               </Card>
             ))}
           </div>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-}; 
+                 </TabsContent>
+
+         {/* Weekly Planner */}
+         <TabsContent value="planner" className="space-y-4">
+           <WeeklyWorkoutPlanner
+             savedWorkouts={savedWorkouts}
+             onScheduleWorkout={(day, workout) => {
+               console.log(`Scheduled ${workout.name} for ${day}`);
+             }}
+           />
+         </TabsContent>
+       </Tabs>
+     </div>
+   );
+ }; 

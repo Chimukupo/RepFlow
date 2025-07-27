@@ -25,7 +25,7 @@ export const WorkoutSession: React.FC<WorkoutSessionProps> = ({
     }))
   );
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const [isTimerActive, setIsTimerActive] = useState(false);
+  const [isTimerActive, setIsTimerActive] = useState(true); // Start timer automatically
   const [sessionStartTime] = useState(new Date());
   const [sessionNotes, setSessionNotes] = useState('');
 
@@ -158,12 +158,12 @@ export const WorkoutSession: React.FC<WorkoutSessionProps> = ({
 
       {/* Current Exercise */}
       {currentExercise && (
-        <Card>
+        <Card className="glass-card">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-xl">{currentExercise.exerciseName}</CardTitle>
-                <p className="text-gray-600">
+                <CardTitle className="text-xl text-foreground">{currentExercise.exerciseName}</CardTitle>
+                <p className="text-muted-foreground">
                   Exercise {currentExerciseIndex + 1} of {sessionExercises.length}
                 </p>
               </div>

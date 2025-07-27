@@ -106,52 +106,54 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-900">Exercise Library</h2>
-          <p className="text-gray-600 mt-1">
-            Choose from {EXERCISES.length} exercises • {filteredExercises.length} shown
-          </p>
+      <div className="glass-card p-6 rounded-xl">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 className="text-3xl font-bold text-foreground">Exercise Library</h2>
+            <p className="text-muted-foreground mt-1">
+              Choose from {EXERCISES.length} exercises • {filteredExercises.length} shown
+            </p>
+          </div>
+                   
+           <Button
+             onClick={() => setShowFilters(!showFilters)}
+             variant="outline"
+             className="glass flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95"
+           >
+             <Filter className="w-4 h-4" />
+             {showFilters ? 'Hide Filters' : 'Show Filters'}
+           </Button>
         </div>
-                 
-         <Button
-           onClick={() => setShowFilters(!showFilters)}
-           variant="outline"
-           className="flex items-center gap-2"
-         >
-           <Filter className="w-4 h-4" />
-           {showFilters ? 'Hide Filters' : 'Show Filters'}
-         </Button>
-      </div>
 
-      {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-        <input
-          type="text"
-          placeholder="Search exercises..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
+        {/* Search Bar */}
+        <div className="relative mt-4">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+          <input
+            type="text"
+            placeholder="Search exercises..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 glass rounded-lg text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/50 transition-all duration-200"
+          />
+        </div>
       </div>
 
       {/* Filters */}
       {showFilters && (
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
-            <CardTitle className="text-lg">Filters</CardTitle>
-            <CardDescription>Narrow down your exercise selection</CardDescription>
+            <CardTitle className="text-lg text-foreground">Filters</CardTitle>
+            <CardDescription className="text-muted-foreground">Narrow down your exercise selection</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Category Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Category</label>
                 <select
                   value={filters.category}
                   onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value as ExerciseCategory | 'all' }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 glass rounded-md text-foreground focus:ring-2 focus:ring-primary/50 transition-all duration-200"
                 >
                   <option value="all">All Categories</option>
                   {categories.map(category => (
@@ -164,11 +166,11 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
 
               {/* Difficulty Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Difficulty</label>
                 <select
                   value={filters.difficulty}
                   onChange={(e) => setFilters(prev => ({ ...prev, difficulty: e.target.value as DifficultyLevel | 'all' }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 glass rounded-md text-foreground focus:ring-2 focus:ring-primary/50 transition-all duration-200"
                 >
                   <option value="all">All Levels</option>
                   {difficulties.map(difficulty => (
@@ -181,11 +183,11 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
 
               {/* Equipment Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Equipment</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Equipment</label>
                 <select
                   value={filters.equipment}
                   onChange={(e) => setFilters(prev => ({ ...prev, equipment: e.target.value as EquipmentType | 'all' }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 glass rounded-md text-foreground focus:ring-2 focus:ring-primary/50 transition-all duration-200"
                 >
                   <option value="all">All Equipment</option>
                   {equipmentTypes.map(equipment => (
@@ -199,11 +201,11 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
               {/* Muscle Group Filter */}
               {showMuscleGroups && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Muscle Group</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Muscle Group</label>
                   <select
                     value={filters.muscleGroup}
                     onChange={(e) => setFilters(prev => ({ ...prev, muscleGroup: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 glass rounded-md text-foreground focus:ring-2 focus:ring-primary/50 transition-all duration-200"
                   >
                     <option value="">All Muscles</option>
                     {muscleGroups.sort().map(muscle => (
@@ -217,7 +219,7 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
             </div>
 
             {/* Clear Filters */}
-            <div className="mt-4 pt-4 border-t">
+            <div className="mt-4 pt-4 border-t border-border">
               <Button
                 onClick={() => {
                   setFilters({
@@ -230,6 +232,7 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
                 }}
                 variant="outline"
                 size="sm"
+                className="glass transition-all duration-200 hover:scale-105 active:scale-95"
               >
                 Clear All Filters
               </Button>
@@ -278,10 +281,10 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
           return (
             <Card 
               key={exercise.id} 
-              className={`group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 ${
+              className={`group cursor-pointer glass-card transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border ${
                 isSelected(exercise) 
-                  ? 'ring-2 ring-blue-500 bg-blue-50 border-blue-200 shadow-lg' 
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? 'ring-2 ring-primary/50 shadow-xl' 
+                  : 'hover:shadow-lg'
               }`}
               onClick={() => handleExerciseClick(exercise)}
             >
@@ -292,7 +295,7 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
                 </div>
 
                 <div className="pr-12">
-                  <CardTitle className="text-lg font-bold leading-tight mb-2 group-hover:text-blue-600 transition-colors">
+                  <CardTitle className="text-lg font-bold leading-tight mb-2 text-foreground group-hover:text-primary transition-colors duration-200">
                     {exercise.name}
                   </CardTitle>
                   
@@ -303,11 +306,11 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
                     </Badge>
                     <div className="flex items-center gap-1">
                       <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                      <span className="text-xs font-medium text-gray-600">4.5</span>
+                      <span className="text-xs font-medium text-muted-foreground">4.5</span>
                     </div>
                   </div>
                   
-                  <CardDescription className="text-sm text-gray-600 line-clamp-2">
+                  <CardDescription className="text-sm text-muted-foreground line-clamp-2">
                     {exercise.description}
                   </CardDescription>
                 </div>
@@ -316,10 +319,10 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
               <CardContent className="pt-0 space-y-4">
                 {/* Enhanced Muscle Group Visualization */}
                 <div className="flex justify-center">
-                  <div className="relative w-24 h-32 bg-gradient-to-b from-gray-50 to-gray-100 rounded-xl border-2 border-gray-200 overflow-hidden shadow-inner">
+                  <div className="relative w-24 h-32 glass rounded-xl overflow-hidden shadow-inner">
                     {muscleImage?.isLoading && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-                        <div className="animate-spin rounded-full h-6 w-6 border-2 border-blue-600 border-t-transparent"></div>
+                      <div className="absolute inset-0 flex items-center justify-center glass">
+                        <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div>
                       </div>
                     )}
                     
@@ -336,16 +339,16 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
                     )}
                     
                     {muscleImage?.error && (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center text-xs text-gray-400 p-2 text-center">
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-xs text-muted-foreground p-2 text-center">
                         <Target className="w-6 h-6 mb-1" />
                         <span>Image unavailable</span>
                       </div>
                     )}
                     
                     {!muscleImage && (
-                      <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-400">
+                      <div className="absolute inset-0 flex items-center justify-center text-xs text-muted-foreground">
                         <div className="animate-pulse flex flex-col items-center">
-                          <div className="w-8 h-8 bg-gray-300 rounded-full mb-2"></div>
+                          <div className="w-8 h-8 bg-muted rounded-full mb-2"></div>
                           <span>Loading...</span>
                         </div>
                       </div>
@@ -354,31 +357,31 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
                 </div>
 
                 {/* Quick Stats */}
-                <div className="grid grid-cols-2 gap-3 p-3 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-2 gap-3 p-3 glass rounded-lg">
                   <div className="text-center">
-                    <div className="text-xs font-medium text-gray-500 mb-1">Primary</div>
-                    <div className="text-sm font-bold text-gray-900">{exercise.primaryMuscles.length}</div>
+                    <div className="text-xs font-medium text-muted-foreground mb-1">Primary</div>
+                    <div className="text-sm font-bold text-foreground">{exercise.primaryMuscles.length}</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-xs font-medium text-gray-500 mb-1">Equipment</div>
-                    <div className="text-sm font-bold text-gray-900">{exercise.equipment.length}</div>
+                    <div className="text-xs font-medium text-muted-foreground mb-1">Equipment</div>
+                    <div className="text-sm font-bold text-foreground">{exercise.equipment.length}</div>
                   </div>
                 </div>
 
                 {/* Primary Muscles - Compact */}
                 <div>
-                  <p className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                  <p className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
                     <Target className="w-3 h-3" />
                     Primary Muscles
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {exercise.primaryMuscles.slice(0, 3).map(muscle => (
-                      <Badge key={muscle} variant="secondary" className="text-xs px-2 py-1 bg-blue-100 text-blue-800 border-blue-200">
+                      <Badge key={muscle} variant="secondary" className="text-xs px-2 py-1">
                         {muscle}
                       </Badge>
                     ))}
                     {exercise.primaryMuscles.length > 3 && (
-                      <Badge variant="secondary" className="text-xs px-2 py-1 bg-gray-100 text-gray-600">
+                      <Badge variant="secondary" className="text-xs px-2 py-1">
                         +{exercise.primaryMuscles.length - 3}
                       </Badge>
                     )}
@@ -387,18 +390,18 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
 
                 {/* Equipment - Compact */}
                 <div>
-                  <p className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                  <p className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
                     <Dumbbell className="w-3 h-3" />
                     Equipment
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {exercise.equipment.slice(0, 2).map(eq => (
-                      <Badge key={eq} variant="outline" className="text-xs px-2 py-1 border-gray-300 text-gray-700">
+                      <Badge key={eq} variant="outline" className="text-xs px-2 py-1">
                         {eq}
                       </Badge>
                     ))}
                     {exercise.equipment.length > 2 && (
-                      <Badge variant="outline" className="text-xs px-2 py-1 border-gray-300 text-gray-600">
+                      <Badge variant="outline" className="text-xs px-2 py-1">
                         +{exercise.equipment.length - 2}
                       </Badge>
                     )}
@@ -407,9 +410,9 @@ export const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
 
                 {/* Target Reps with Icon */}
                 {exercise.targetReps && (
-                  <div className="flex items-center gap-2 p-2 bg-green-50 rounded-lg border border-green-200">
+                  <div className="flex items-center gap-2 p-2 bg-green-500/10 border border-green-500/20 rounded-lg">
                     <Clock className="w-4 h-4 text-green-600" />
-                    <span className="text-xs font-medium text-green-800">
+                    <span className="text-xs font-medium text-green-700 dark:text-green-600">
                       Target: {exercise.targetReps.min}-{exercise.targetReps.max} reps
                     </span>
                   </div>

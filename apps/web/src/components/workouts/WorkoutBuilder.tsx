@@ -114,12 +114,36 @@ export const WorkoutBuilder: React.FC<WorkoutBuilderProps> = ({
     }));
   }, []);
 
-  // Calculate estimated workout duration
+  // Calculate estimated workout duration with realistic timing
   const calculateDuration = useCallback(() => {
     return workoutExercises.reduce((total, exercise) => {
-      const setTime = exercise.sets.length * 30; // Assume 30 seconds per set
+      // Calculate time per set based on exercise type and reps
+      const avgReps = exercise.sets.reduce((sum, set) => sum + set.reps, 0) / exercise.sets.length;
+      
+      // Different exercises have different time per rep
+      let timePerRep = 3; // Default 3 seconds per rep
+      const exerciseName = exercise.exerciseName.toLowerCase();
+      
+      if (exerciseName.includes('plank') || exerciseName.includes('hold')) {
+        timePerRep = avgReps; // For holds, reps usually represent seconds
+      } else if (exerciseName.includes('deadlift') || exerciseName.includes('squat')) {
+        timePerRep = 4; // Compound movements take longer
+      } else if (exerciseName.includes('curl') || exerciseName.includes('extension')) {
+        timePerRep = 2.5; // Isolation exercises are faster
+      } else if (exerciseName.includes('push up') || exerciseName.includes('pull up')) {
+        timePerRep = 2; // Bodyweight exercises
+      } else if (exerciseName.includes('running') || exerciseName.includes('cardio')) {
+        timePerRep = 60; // Cardio reps usually represent minutes
+      }
+      
+      const setTime = exercise.sets.reduce((setTotal, set) => {
+        return setTotal + (set.reps * timePerRep);
+      }, 0);
+      
       const restTime = (exercise.sets.length - 1) * (exercise.restBetweenSets || 60);
-      return total + setTime + restTime;
+      const setupTime = 30; // 30 seconds setup time per exercise
+      
+      return total + setTime + restTime + setupTime;
     }, 0) / 60; // Convert to minutes
   }, [workoutExercises]);
 
@@ -144,7 +168,7 @@ export const WorkoutBuilder: React.FC<WorkoutBuilderProps> = ({
       isTemplate: true,
       createdAt: initialWorkout?.createdAt || new Date(),
       updatedAt: new Date(),
-      createdBy: initialWorkout?.createdBy, // Preserve existing createdBy for updates
+      createdBy: initialWorkout?.createdBy || '', // This will be set by WorkoutManager
     };
 
     onSaveWorkout?.(workout);
@@ -166,6 +190,7 @@ export const WorkoutBuilder: React.FC<WorkoutBuilderProps> = ({
       isTemplate: false,
       createdAt: initialWorkout?.createdAt || new Date(),
       updatedAt: new Date(),
+      createdBy: initialWorkout?.createdBy || '', // This will be set by WorkoutManager
     };
 
     onStartWorkout?.(workout);
@@ -203,35 +228,46 @@ export const WorkoutBuilder: React.FC<WorkoutBuilderProps> = ({
             </div>
           </div>
 
-          {/* Workout Stats */}
-          <div className="flex flex-wrap gap-3 text-sm text-gray-600">
-            <span className="flex items-center gap-1">
-              <Target className="w-3 h-3" />
-              {workoutExercises.length} exercises
-            </span>
-            <span className="flex items-center gap-1">
-              <Dumbbell className="w-3 h-3" />
-              {workoutExercises.reduce((total, ex) => total + ex.sets.length, 0)} sets
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              ~{Math.ceil(calculateDuration())} min
-            </span>
-          </div>
+                     {/* Workout Stats */}
+           <div className="grid grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+             <div className="text-center">
+               <div className="flex items-center justify-center gap-1 text-blue-600 mb-1">
+                 <Target className="w-4 h-4" />
+               </div>
+               <div className="text-2xl font-bold text-gray-900">{workoutExercises.length}</div>
+               <div className="text-xs text-gray-600">Exercises</div>
+             </div>
+             <div className="text-center">
+               <div className="flex items-center justify-center gap-1 text-green-600 mb-1">
+                 <Dumbbell className="w-4 h-4" />
+               </div>
+               <div className="text-2xl font-bold text-gray-900">
+                 {workoutExercises.reduce((total, ex) => total + ex.sets.length, 0)}
+               </div>
+               <div className="text-xs text-gray-600">Total Sets</div>
+             </div>
+             <div className="text-center">
+               <div className="flex items-center justify-center gap-1 text-orange-600 mb-1">
+                 <Clock className="w-4 h-4" />
+               </div>
+               <div className="text-2xl font-bold text-gray-900">{Math.ceil(calculateDuration())}</div>
+               <div className="text-xs text-gray-600">Est. Minutes</div>
+             </div>
+           </div>
         </CardContent>
       </Card>
 
       {/* Exercise List */}
       <div className="space-y-4">
         {workoutExercises.map((exercise) => (
-          <Card key={exercise.id}>
+          <Card key={exercise.id} className="glass-card">
             <CardHeader className="pb-3">
               <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
                 <div className="flex items-center gap-3 min-w-0">
-                  <GripVertical className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <GripVertical className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <CardTitle className="text-base sm:text-lg truncate">{exercise.exerciseName}</CardTitle>
-                    <p className="text-sm text-gray-600">{exercise.sets.length} sets</p>
+                    <CardTitle className="text-base sm:text-lg truncate text-foreground">{exercise.exerciseName}</CardTitle>
+                    <p className="text-sm text-muted-foreground">{exercise.sets.length} sets</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -257,72 +293,80 @@ export const WorkoutBuilder: React.FC<WorkoutBuilderProps> = ({
               </div>
             </CardHeader>
             <CardContent>
-              {/* Sets Table */}
-              <div className="space-y-2">
-                <div className="grid grid-cols-4 gap-2 text-sm font-medium text-gray-600 px-2">
-                  <span>Set</span>
-                  <span>Reps</span>
-                  <span>Weight (lbs)</span>
-                  <span>Actions</span>
-                </div>
-                {exercise.sets.map((set, setIndex) => (
-                  <div key={set.id} className="grid grid-cols-4 gap-2 items-center">
-                    <Badge variant="outline" className="justify-center w-fit">
-                      {setIndex + 1}
-                    </Badge>
-                    <Input
-                      type="number"
-                      min="1"
-                      max="999"
-                      value={set.reps}
-                      onChange={(e) => handleUpdateSet(exercise.id, set.id, 'reps', parseInt(e.target.value) || 1)}
-                      className="text-center"
-                    />
-                    <Input
-                      type="number"
-                      min="0"
-                      max="9999"
-                      step="0.5"
-                      value={set.weight || 0}
-                      onChange={(e) => handleUpdateSet(exercise.id, set.id, 'weight', parseFloat(e.target.value) || 0)}
-                      className="text-center"
-                    />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleRemoveSet(exercise.id, set.id)}
-                      disabled={exercise.sets.length <= 1}
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </Button>
-                  </div>
-                ))}
+                             {/* Sets Table */}
+               <div className="space-y-3">
+                 <div className="grid grid-cols-4 gap-2 text-sm font-medium text-muted-foreground px-3 py-2 glass rounded-md">
+                   <span>Set</span>
+                   <span>Reps</span>
+                   <span>Weight (lbs)</span>
+                   <span>Actions</span>
+                 </div>
+                                 {exercise.sets.map((set, setIndex) => (
+                   <div key={set.id} className="grid grid-cols-4 gap-2 items-center p-2 hover:bg-accent/50 rounded-md transition-colors duration-200">
+                     <Badge variant="outline" className="justify-center w-fit text-xs">
+                       {setIndex + 1}
+                     </Badge>
+                     <Input
+                       type="number"
+                       min="1"
+                       max="999"
+                       value={set.reps}
+                       onChange={(e) => handleUpdateSet(exercise.id, set.id, 'reps', parseInt(e.target.value) || 1)}
+                       className="text-center h-9"
+                     />
+                     <Input
+                       type="number"
+                       min="0"
+                       max="9999"
+                       step="0.5"
+                       value={set.weight || 0}
+                       onChange={(e) => handleUpdateSet(exercise.id, set.id, 'weight', parseFloat(e.target.value) || 0)}
+                       className="text-center h-9"
+                     />
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       onClick={() => handleRemoveSet(exercise.id, set.id)}
+                       disabled={exercise.sets.length <= 1}
+                       className="h-9"
+                     >
+                       <Trash2 className="w-3 h-3" />
+                     </Button>
+                   </div>
+                 ))}
               </div>
 
-              {/* Rest Time */}
-              <div className="mt-4 flex items-center gap-2">
-                <Label className="text-sm">Rest between sets:</Label>
-                <Input
-                  type="number"
-                  min="0"
-                  max="600"
-                  value={exercise.restBetweenSets || 60}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value) || 60;
-                    setWorkoutExercises(prev => prev.map(ex => 
-                      ex.id === exercise.id ? { ...ex, restBetweenSets: value } : ex
-                    ));
-                  }}
-                  className="w-20 text-center"
-                />
-                <span className="text-sm text-gray-600">seconds</span>
-              </div>
+                             {/* Rest Time */}
+               <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                 <div className="flex items-center justify-between">
+                   <Label className="text-sm font-medium text-blue-900">Rest between sets:</Label>
+                   <div className="flex items-center gap-2">
+                     <Input
+                       type="number"
+                       min="0"
+                       max="600"
+                       value={exercise.restBetweenSets || 60}
+                       onChange={(e) => {
+                         const value = parseInt(e.target.value) || 60;
+                         setWorkoutExercises(prev => prev.map(ex => 
+                           ex.id === exercise.id ? { ...ex, restBetweenSets: value } : ex
+                         ));
+                       }}
+                       className="w-20 text-center h-8"
+                     />
+                     <span className="text-sm text-blue-700 font-medium">seconds</span>
+                   </div>
+                 </div>
+                 <div className="text-xs text-blue-600 mt-1">
+                   Recommended: 60-120s for strength, 30-60s for endurance
+                 </div>
+               </div>
             </CardContent>
           </Card>
         ))}
 
         {/* Add Exercise Button */}
-        <Card className="border-dashed border-2 border-gray-300 hover:border-gray-400 transition-colors">
+        <Card className="glass-card border-dashed border-2 border-slate-600/50 hover:border-slate-500/70 transition-colors">
           <CardContent className="flex items-center justify-center py-8">
             <Button
               variant="ghost"
