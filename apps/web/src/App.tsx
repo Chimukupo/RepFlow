@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { User, Power, Dumbbell, Target, TrendingUp, Trophy, Eye, BarChart3, Activity } from 'lucide-react';
+import { User, Power, Dumbbell, Target, TrendingUp, Trophy, Eye, BarChart3, Activity, Home, Search, Calendar, Medal, Heart, LineChart, Settings } from 'lucide-react';
 import { useAuth } from './contexts/AuthContext';
 import { AuthPage } from './pages/AuthPage';
 import { ExerciseWorkspace } from './components/exercises/ExerciseWorkspace';
@@ -12,6 +12,7 @@ import { BMICalculator } from './components/health/BMICalculator';
 import { ProgressDashboard } from './components/analytics/ProgressDashboard';
 import { ProfileUpdateForm } from './components/profile/ProfileUpdateForm';
 import { AchievementDashboard } from './components/achievements/AchievementDashboard';
+import { PowerBar } from './components/gamification/PowerBar';
 import { LandingPage } from './components/LandingPage';
 import { AuthGuard } from './components/auth/AuthGuard';
 
@@ -47,6 +48,17 @@ const Dashboard: React.FC = () => {
             </div>
             
             <div className="flex items-center space-x-4">
+              {/* Mini Power Level Indicator */}
+              <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 glass-card rounded-full">
+                <div className="w-5 h-5 rounded-full bg-yellow-100 flex items-center justify-center text-xs">
+                  🏆
+                </div>
+                <span className="text-xs font-medium text-yellow-600">Champion</span>
+                <div className="w-8 h-1 bg-muted rounded-full overflow-hidden">
+                  <div className="w-3/4 h-full bg-yellow-500 rounded-full"></div>
+                </div>
+              </div>
+
               <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 bg-muted/30 rounded-full border border-border/40">
                 <User className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm font-medium text-foreground">
@@ -72,16 +84,39 @@ const Dashboard: React.FC = () => {
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="glass-card grid w-full grid-cols-8 p-1.5 mb-8 shadow-sm">
-              <TabsTrigger value="overview" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Overview</TabsTrigger>
-              <TabsTrigger value="exercises" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Exercises</TabsTrigger>
-              <TabsTrigger value="workouts" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state-active]:shadow-sm font-medium">Workouts</TabsTrigger>
-              <TabsTrigger value="goals" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Goals</TabsTrigger>
-              <TabsTrigger value="achievements" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Achievements</TabsTrigger>
-              <TabsTrigger value="health" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Health</TabsTrigger>
-              <TabsTrigger value="progress" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Progress</TabsTrigger>
-              <TabsTrigger value="profile" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium">Profile</TabsTrigger>
-
+            <TabsList className="glass-card flex w-full p-1 mb-8 shadow-sm gap-1">
+              <TabsTrigger value="overview" className="flex-1 flex items-center justify-center gap-2 px-2 py-3 text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium min-w-0">
+                <Home className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline text-sm truncate">Overview</span>
+              </TabsTrigger>
+              <TabsTrigger value="exercises" className="flex-1 flex items-center justify-center gap-2 px-2 py-3 text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium min-w-0">
+                <Search className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline text-sm truncate">Exercises</span>
+              </TabsTrigger>
+              <TabsTrigger value="workouts" className="flex-1 flex items-center justify-center gap-2 px-2 py-3 text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium min-w-0">
+                <Calendar className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline text-sm truncate">Workouts</span>
+              </TabsTrigger>
+              <TabsTrigger value="goals" className="flex-1 flex items-center justify-center gap-2 px-2 py-3 text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium min-w-0">
+                <Target className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline text-sm truncate">Goals</span>
+              </TabsTrigger>
+              <TabsTrigger value="achievements" className="hidden lg:flex flex-1 items-center justify-center gap-2 px-2 py-3 text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium min-w-0">
+                <Medal className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline text-sm truncate">Achievements</span>
+              </TabsTrigger>
+              <TabsTrigger value="health" className="hidden lg:flex flex-1 items-center justify-center gap-2 px-2 py-3 text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium min-w-0">
+                <Heart className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline text-sm truncate">Health</span>
+              </TabsTrigger>
+              <TabsTrigger value="progress" className="hidden lg:flex flex-1 items-center justify-center gap-2 px-2 py-3 text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium min-w-0">
+                <LineChart className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline text-sm truncate">Progress</span>
+              </TabsTrigger>
+              <TabsTrigger value="profile" className="hidden lg:flex flex-1 items-center justify-center gap-2 px-2 py-3 text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200 data-[state=active]:shadow-sm font-medium min-w-0">
+                <Settings className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline text-sm truncate">Profile</span>
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-8">
@@ -94,26 +129,26 @@ const Dashboard: React.FC = () => {
                       <Dumbbell className="w-8 h-8 text-primary" />
                     </div>
                     <div>
-                      <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                      <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2 tes">
                         Welcome to RepFlow
                       </h1>
                       <p className="text-lg text-muted-foreground">
-                        Breathe, Train, Conquer - Your AI-powered fitness companion
+                        Breathe, Train, Conquer
                       </p>
                     </div>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-primary mb-2">500+</div>
-                      <div className="text-sm text-muted-foreground">Exercises Available</div>
+                      <div className="text-3xl font-bold text-primary mb-2">🏋️‍♂️</div>
+                      <div className="text-sm text-muted-foreground">Detailed Exercise Library</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-primary mb-2">AI</div>
+                      <div className="text-3xl font-bold text-primary mb-2">💪</div>
                       <div className="text-sm text-muted-foreground">Muscle Visualization</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-primary mb-2">24/7</div>
+                      <div className="text-3xl font-bold text-primary mb-2">📈</div>
                       <div className="text-sm text-muted-foreground">Progress Tracking</div>
                     </div>
                   </div>
@@ -229,6 +264,14 @@ const Dashboard: React.FC = () => {
                   </CardContent>
                 </Card>
               </div>
+
+              {/* Gamification Power Bar */}
+              <PowerBar
+                weeklyWorkouts={3}
+                totalWorkouts={28}
+                currentStreak={5}
+                bestStreak={12}
+              />
 
               {/* Recent Activity Placeholder */}
               <Card className="glass-card">

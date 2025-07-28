@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { AxiosResponse } from 'axios';
 import { env } from '@/env';
+import { exerciseToMuscleGroups as enhancedExerciseMapping } from 'shared/data/exercises';
 
 // Available muscle groups from RapidAPI
 export const MUSCLE_GROUPS = [
@@ -400,39 +401,50 @@ export const muscleGroupAPI = MuscleGroupAPI.getInstance();
 
 /**
  * Convert exercise names to muscle groups for API calls
+ * Uses the comprehensive mapping from the exercise database
  */
 export function exerciseToMuscleGroups(exerciseName: string): MuscleGroup[] {
-  const exerciseMapping: Record<string, MuscleGroup[]> = {
-    // Push exercises
-    'push-up': ['chest', 'triceps', 'shoulders'],
-    'bench-press': ['chest', 'triceps', 'shoulders'],
-    'shoulder-press': ['shoulders', 'triceps'],
-    'tricep-dips': ['triceps', 'chest'],
+  try {
+    const muscles = enhancedExerciseMapping(exerciseName);
+    // Filter to only include muscles that exist in our API muscle groups
+    return muscles.filter((muscle: string) => MUSCLE_GROUPS.includes(muscle as MuscleGroup)) as MuscleGroup[];
+  } catch (error) {
+    console.warn('Failed to get muscle groups from enhanced mapping:', error);
     
-    // Pull exercises
-    'pull-up': ['back', 'biceps'],
-    'chin-up': ['biceps', 'back'],
-    'rows': ['back', 'biceps'],
-    'lat-pulldown': ['latissimus', 'biceps'],
-    
-    // Leg exercises
-    'squat': ['quadriceps', 'gluteus'],
-    'deadlift': ['hamstring', 'gluteus', 'back'],
-    'lunges': ['quadriceps', 'gluteus'],
-    'calf-raises': ['calfs'],
-    
-    // Core exercises
-    'plank': ['abs', 'core'],
-    'crunches': ['abs'],
-    'sit-ups': ['abs', 'core'],
-    
-    // Full body
-    'burpees': ['all'],
-    'mountain-climbers': ['core', 'shoulders', 'legs'],
-  };
+    // Fallback to basic mapping
+    const basicMapping: Record<string, MuscleGroup[]> = {
+      'push-up': ['chest', 'triceps', 'shoulders'],
+      'bench-press': ['chest', 'triceps', 'shoulders'],
+      'shoulder-press': ['shoulders', 'triceps'],
+      'tricep-dips': ['triceps', 'chest'],
+      'pull-up': ['back', 'biceps'],
+      'chin-up': ['biceps', 'back'],
+      'rows': ['back', 'biceps'],
+      'lat-pulldown': ['latissimus', 'biceps'],
+      'squat': ['quadriceps', 'gluteus'],
+      'deadlift': ['hamstring', 'gluteus', 'back'],
+      'lunges': ['quadriceps', 'gluteus'],
+      'calf-raises': ['calfs'],
+      'plank': ['abs', 'core'],
+      'crunches': ['abs'],
+      'sit-ups': ['abs', 'core'],
+      'burpees': ['all'],
+      'mountain-climbers': ['core', 'shoulders', 'legs'],
+      
+      // New exercises
+      'leg-press': ['quadriceps', 'gluteus'],
+      'chest-fly': ['chest'],
+      'face-pulls': ['shoulders', 'back'],
+      'goblet-squat': ['quadriceps', 'gluteus'],
+      'wall-sit': ['quadriceps', 'gluteus'],
+      'farmer-walk': ['forearms', 'core'],
+      'hip-abduction': ['gluteus'],
+      'rowing-machine': ['back', 'latissimus']
+    };
 
-  const normalized = exerciseName.toLowerCase().replace(/\s+/g, '-');
-  return exerciseMapping[normalized] || ['all'];
+    const normalized = exerciseName.toLowerCase().replace(/\s+/g, '-');
+    return basicMapping[normalized] || ['all'];
+  }
 }
 
 /**

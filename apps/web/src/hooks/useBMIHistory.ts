@@ -9,6 +9,7 @@ import type {
   BMIHistoryQuery,
   BMICategory
 } from 'shared/schemas/bmi-history';
+import { calculateBMI, getBMICategory } from 'shared/schemas/bmi-history';
 
 // Hook to get BMI history for a user
 export const useBMIHistory = (queryParams?: Partial<BMIHistoryQuery>) => {
@@ -201,7 +202,7 @@ export const useUpdateBMIEntry = () => {
         let newCategory = old.category;
         
         if (updates.weight || updates.height || updates.units) {
-          const { calculateBMI, getBMICategory } = require('shared/schemas/bmi-history');
+
           const weight = updates.weight || old.weight;
           const height = updates.height || old.height;
           const units = updates.units || old.units;

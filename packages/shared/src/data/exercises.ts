@@ -808,6 +808,182 @@ export const EXERCISES: Exercise[] = [
     targetSets: { min: 3, max: 4 },
     restTime: { min: 45, max: 90 },
     tags: ['core', 'obliques', 'rotational']
+  },
+
+  // === ADDITIONAL POPULAR EXERCISES ===
+  {
+    id: 'leg-press',
+    name: 'Leg Press',
+    slug: 'leg-press',
+    description: 'Machine-based compound exercise targeting the entire lower body',
+    instructions: [
+      'Sit on the leg press machine with back against the pad',
+      'Place feet shoulder-width apart on the footplate',
+      'Lower the weight by bending your knees to 90 degrees',
+      'Press the weight back up through your heels'
+    ],
+    primaryMuscles: ['quadriceps', 'gluteus'],
+    secondaryMuscles: ['hamstring', 'calfs'],
+    category: 'legs',
+    difficulty: 'beginner',
+    equipment: ['cable-machine'],
+    force: 'push',
+    mechanic: 'compound',
+    tips: [
+      'Keep your core tight throughout the movement',
+      'Don\'t lock your knees at the top',
+      'Control the descent for better muscle activation'
+    ],
+    variations: ['Single-Leg Press', 'High-Foot Position', 'Low-Foot Position'],
+    commonMistakes: [
+      'Going too deep and rounding the back',
+      'Not using full range of motion',
+      'Pushing through toes instead of heels'
+    ],
+    targetReps: { min: 8, max: 15 },
+    targetSets: { min: 3, max: 4 },
+    restTime: { min: 90, max: 180 },
+    tags: ['machine', 'compound', 'lower-body']
+  },
+
+  {
+    id: 'chest-fly',
+    name: 'Chest Fly',
+    slug: 'chest-fly',
+    description: 'Isolation exercise targeting the chest muscles with dumbbells',
+    instructions: [
+      'Lie on a bench holding dumbbells above your chest',
+      'With a slight bend in elbows, lower weights out to sides',
+      'Feel a stretch in your chest, then bring weights back together',
+      'Squeeze chest muscles at the top of the movement'
+    ],
+    primaryMuscles: ['chest'],
+    secondaryMuscles: ['shoulders'],
+    category: 'push',
+    difficulty: 'intermediate',
+    equipment: ['dumbbells', 'bench'],
+    force: 'push',
+    mechanic: 'isolation',
+    tips: [
+      'Keep a slight bend in your elbows throughout',
+      'Focus on feeling the stretch in your chest',
+      'Control the weight on the way down'
+    ],
+    variations: ['Incline Chest Fly', 'Decline Chest Fly', 'Cable Fly'],
+    commonMistakes: [
+      'Using too much weight',
+      'Bending elbows too much',
+      'Not controlling the descent'
+    ],
+    targetReps: { min: 10, max: 15 },
+    targetSets: { min: 3, max: 4 },
+    restTime: { min: 60, max: 90 },
+    tags: ['dumbbells', 'isolation', 'chest']
+  },
+
+  {
+    id: 'face-pulls',
+    name: 'Face Pulls',
+    slug: 'face-pulls',
+    description: 'Cable exercise targeting rear delts and improving posture',
+    instructions: [
+      'Set cable machine to upper chest height',
+      'Grab rope attachment with overhand grip',
+      'Pull rope towards your face, separating hands',
+      'Squeeze shoulder blades together at the end'
+    ],
+    primaryMuscles: ['shoulders'],
+    secondaryMuscles: ['back', 'biceps'],
+    category: 'pull',
+    difficulty: 'beginner',
+    equipment: ['cable-machine'],
+    force: 'pull',
+    mechanic: 'isolation',
+    tips: [
+      'Focus on pulling elbows back, not just hands',
+      'Keep shoulders down and back',
+      'Use light weight and focus on form'
+    ],
+    variations: ['Band Face Pulls', 'Reverse Fly', 'High Cable Row'],
+    commonMistakes: [
+      'Using too much weight',
+      'Not separating hands at the end',
+      'Shrugging shoulders'
+    ],
+    targetReps: { min: 12, max: 20 },
+    targetSets: { min: 3, max: 4 },
+    restTime: { min: 45, max: 75 },
+    tags: ['cable', 'isolation', 'posture', 'rear-delts']
+  },
+
+  {
+    id: 'goblet-squat',
+    name: 'Goblet Squat',
+    slug: 'goblet-squat',
+    description: 'Dumbbell squat variation perfect for learning proper squat form',
+    instructions: [
+      'Hold a dumbbell at chest level with both hands',
+      'Stand with feet slightly wider than shoulder-width',
+      'Lower into a squat, keeping chest up and weight on heels',
+      'Drive through heels to return to standing position'
+    ],
+    primaryMuscles: ['quadriceps', 'gluteus'],
+    secondaryMuscles: ['hamstring', 'core', 'calfs'],
+    category: 'legs',
+    difficulty: 'beginner',
+    equipment: ['dumbbells'],
+    force: 'push',
+    mechanic: 'compound',
+    tips: [
+      'Keep the dumbbell close to your chest',
+      'Focus on sitting back with your hips',
+      'Keep your knees in line with your toes'
+    ],
+    variations: ['Kettlebell Goblet Squat', 'Goblet Squat Pulse', 'Goblet Squat Hold'],
+    commonMistakes: [
+      'Knees caving inward',
+      'Not going deep enough',
+      'Leaning too far forward'
+    ],
+    targetReps: { min: 10, max: 15 },
+    targetSets: { min: 3, max: 4 },
+    restTime: { min: 60, max: 120 },
+    tags: ['dumbbells', 'beginner-friendly', 'compound', 'squat-variation']
+  },
+
+  {
+    id: 'wall-sit',
+    name: 'Wall Sit',
+    slug: 'wall-sit',
+    description: 'Isometric exercise that builds leg strength and endurance',
+    instructions: [
+      'Stand with back against a wall',
+      'Slide down until thighs are parallel to floor',
+      'Keep knees at 90 degrees and feet flat',
+      'Hold this position for the target time'
+    ],
+    primaryMuscles: ['quadriceps', 'gluteus'],
+    secondaryMuscles: ['hamstring', 'calfs', 'core'],
+    category: 'legs',
+    difficulty: 'beginner',
+    equipment: ['bodyweight'],
+    force: 'static',
+    mechanic: 'compound',
+    tips: [
+      'Keep your back flat against the wall',
+      'Distribute weight evenly on both legs',
+      'Breathe normally throughout the hold'
+    ],
+    variations: ['Single-Leg Wall Sit', 'Wall Sit with Calf Raises', 'Wall Sit Pulses'],
+    commonMistakes: [
+      'Knees extending past toes',
+      'Not going low enough',
+      'Putting hands on knees for support'
+    ],
+    targetReps: { min: 30, max: 120 },
+    targetSets: { min: 3, max: 4 },
+    restTime: { min: 60, max: 120 },
+    tags: ['bodyweight', 'isometric', 'endurance', 'no-equipment']
   }
 ];
 
