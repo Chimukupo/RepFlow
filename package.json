@@ -4,15 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vite, pnpm --filter web, turbo dev",
-    "build": "vite build, pnpm --filter web, turbo build",
-    "lint": "eslint . --ext ts,tsx",
-    "typecheck": "tsc --noEmit",
-    "preview": "vite preview",
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "deploy:staging": "pnpm run build && firebase deploy --only hosting:rep-flow-staging --project rep-flow-staging",
+    "deploy:prod": "pnpm run build && firebase deploy --only hosting:rep-flow-prod --project rep-flow-prod",
     "deploy:staging:rules": "firebase use rep-flow-staging && firebase deploy --only firestore:rules,firestore:indexes",
     "deploy:prod:rules": "firebase use rep-flow-prod && firebase deploy --only firestore:rules,firestore:indexes",
-    "deploy:all:rules": "pnpm run deploy:staging:rules && npm run deploy:prod:rules"
+    "deploy:all:rules": "pnpm run deploy:staging:rules && pnpm run deploy:prod:rules"
   },
   "keywords": [],
   "author": "",
